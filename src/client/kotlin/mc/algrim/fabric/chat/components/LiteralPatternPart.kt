@@ -33,10 +33,13 @@ class LiteralPatternPart(
     }
 
     override fun apply(messageContent: String, startIndex: Int): String? {
-        if (messageContent.length < startIndex + value.length
-            && !matches(messageContent.substring(startIndex, value.indices.last))
-        ) return null
-        return value
+        val endIndex = startIndex + value.length
+
+        return if (messageContent.length < endIndex || !matches(messageContent.substring(startIndex, endIndex))) {
+            null
+        } else {
+            value
+        }
     }
 
     override fun toCharStylePair(messageContent: String, startIndex: Int): Array<Pair<Char, Style>>? {
