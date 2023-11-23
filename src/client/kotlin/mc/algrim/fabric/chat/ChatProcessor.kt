@@ -99,7 +99,7 @@ object ChatProcessor {
                 return false
             }
 
-            messageCSPs[i] = Pair(msgChar, patStyle.withParent(msgStyle))
+            messageCSPs[i] = msgChar to patStyle.withParent(msgStyle)
         }
 
         return true
@@ -115,7 +115,7 @@ object ChatProcessor {
                 ++groupId
             } else groupId
         }.aggregate { _, seg: Pair<StringBuilder, Style>?, (char, style), first ->
-            if (first) Pair(StringBuilder().append(char), style)
+            if (first) StringBuilder().append(char) to style
             else {
                 seg!!.first.append(char)
                 seg

@@ -21,7 +21,7 @@ class StylePatternPart(override val pattern: String, override val index: Int) : 
 
     override fun toCharStylePair(messageContent: String, startIndex: Int): Array<Pair<Char, Style>>? {
         return valuePattern.toCharStylePair(messageContent.substring(startIndex))
-            ?.map { (char, style) -> Pair(char, style.withParent(Utils.styleFromString(this.style))) }
+            ?.map { (char, style) -> char to style.withParent(Utils.styleFromString(this.style)) }
             ?.toTypedArray()
     }
 

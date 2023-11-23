@@ -47,7 +47,7 @@ class LiteralPatternPart(
     }
 
     override fun toCharStylePair(messageContent: String, startIndex: Int): Array<Pair<Char, Style>>? {
-        return apply(messageContent, startIndex)?.map { Pair(it, Style.EMPTY) }?.toTypedArray()
+        return apply(messageContent, startIndex)?.map { it to Style.EMPTY }?.toTypedArray()
     }
 
     companion object : PatternPart.Parentheses {
