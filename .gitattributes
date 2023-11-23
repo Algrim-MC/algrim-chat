@@ -1,0 +1,28 @@
+* text=auto
+
+# Source Code
+*.java text eol=lf
+*.kt text eol=lf
+*.kts text eol=lf
+
+# Scripts
+gradlew text eol=lf
+*.sh text eol=lf
+
+# Windows Scripts
+*.bat text eol=crlf
+
+# Text
+*.json text eol=lf
+*.properties text eol=lf
+*.mcmeta text eol=lf
+*.md text eol=lf
+LICENSE.txt text eol=lf
+
+# Git
+.gitattributes text eol=lf
+.gitignore text eol=lf
+
+# Binary
+*.png binary
+*.jpg binary
