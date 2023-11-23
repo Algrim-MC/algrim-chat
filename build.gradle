@@ -26,7 +26,6 @@ loom {
 
     mods {
         "algrim-chat" {
-            sourceSet sourceSets.main
             sourceSet sourceSets.client
         }
     }

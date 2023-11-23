@@ -13,14 +13,8 @@
   },
   "license": "CC0-1.0",
   "icon": "assets/algrim-chat/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "main": [
-      {
-        "value": "mc.algrim.ExampleMod",
-        "adapter": "kotlin"
-      }
-    ],
     "client": [
       {
         "value": "mc.algrim.fabric.chat.AlgrimChatClient",
@@ -29,7 +23,6 @@
     ]
   },
   "mixins": [
-    "algrim-chat.mixins.json",
     {
       "config": "algrim-chat.client.mixins.json",
       "environment": "client"
