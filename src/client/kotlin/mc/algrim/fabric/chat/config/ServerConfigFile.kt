@@ -15,4 +15,9 @@ class ServerConfigFile(configFile: File) : ConfigFile(configFile) {
 
     override val categories: Map<String, List<IConfigBase>> = mapOf("Chat" to chatOptions)
 
+    init {
+        // Loading manually when joining server.
+        this.load()
+    }
+
 }
