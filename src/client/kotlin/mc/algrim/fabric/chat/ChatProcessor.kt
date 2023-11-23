@@ -36,9 +36,12 @@ fun main() {
 }
 
 object ChatProcessor {
+    var enabled = false
     val patterns = ArrayList<Pattern>()
 
     fun execute(message: Text): Text {
+        if (!enabled) return message
+
         val messageContent = message.string
         val messageCSPs = ArrayList<Pair<Char, Style>>()
         message.visit({ style: Style, content: String ->

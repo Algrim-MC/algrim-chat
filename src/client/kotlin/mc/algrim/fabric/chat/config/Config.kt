@@ -19,6 +19,7 @@ object Config : IWorldLoadListener {
 
     fun reloadPatterns(serverConfig: ServerConfigFile) {
         val effectivePatternStrings = ArrayList<String>()
+
         effectivePatternStrings.addAll(serverConfig.patterns.strings)
 
         if (serverConfig.useGlobal.booleanValue) {
@@ -39,6 +40,7 @@ object Config : IWorldLoadListener {
             }
         }
 
+        ChatProcessor.enabled = globalConfig.enabled.booleanValue
         ChatProcessor.patterns.clear()
         ChatProcessor.patterns.addAll(patterns)
     }
