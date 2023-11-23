@@ -28,11 +28,15 @@ fun main() {
 
     pattern.parts.forEach { println("${it::class.simpleName} ${it.value}") }
 
-    println(measureTimeMillis {
-        charStylePairs?.forEach { (char, style) ->
-            println("$char $style")
-        } ?: println("No match")
-    })
+    println(
+        "in ${
+            measureTimeMillis {
+                charStylePairs?.forEach { (char, style) ->
+                    println("$char $style")
+                } ?: println("No match")
+            }
+        }ms"
+    )
 }
 
 object ChatProcessor {
@@ -43,7 +47,35 @@ object ChatProcessor {
         if (!enabled) return message
 
         val messageContent = message.string
+        val messageCSPs = messageToCharStylePair(message)
+
+        patterns.forEach { pattern ->
+            val patternCSPs = pattern.toCharStylePair(messageContent)
+
+            if (patternCSPs == null
+                || patternCSPs.size != messageCSPs.size
+                || !applyPatternCSP(messageCSPs, patternCSPs)
+            ) {
+                logger.debug(
+                    "Pattern '{}'{} didn't match '{}'{}",
+                    pattern,
+                    patternCSPs?.size,
+                    messageContent,
+                    messageCSPs.size
+                )
+
+                return@forEach
+            }
+
+            return aggregateCSPs(messageCSPs)
+        }
+
+        return message
+    }
+
+    private fun messageToCharStylePair(message: Text): ArrayList<Pair<Char, Style>> {
         val messageCSPs = ArrayList<Pair<Char, Style>>()
+
         message.visit({ style: Style, content: String ->
             for (char in content) {
                 messageCSPs.add(Pair(char, style))
@@ -51,58 +83,45 @@ object ChatProcessor {
             Optional.empty<Any?>()
         }, Style.EMPTY)
 
+        return messageCSPs
+    }
 
-        patterns.forEach { pattern ->
-            val patternCSPs = pattern.toCharStylePair(messageContent)
+    private fun applyPatternCSP(
+        messageCSPs: MutableList<Pair<Char, Style>>,
+        patternCSPs: Array<Pair<Char, Style>>
+    ): Boolean {
+        for (i in patternCSPs.indices) {
+            val (msgChar, msgStyle) = messageCSPs[i]
+            val (patChar, patStyle) = patternCSPs[i]
 
-            if (patternCSPs == null) {
-                logger.info("Pattern '$pattern' didn't match '$messageContent'")
-                return@forEach
+            if (msgChar != patChar) {
+                logger.debug("Pattern char {} didn't match {}", msgChar, patChar)
+                return false
             }
 
-            if (patternCSPs.size != messageCSPs.size) {
-                logger.info("Pattern '$pattern'${patternCSPs.size} didn't match '$messageContent'${messageCSPs.size}")
-                return@forEach
-            }
-
-            for (i in patternCSPs.indices) {
-                val (msgChar, msgStyle) = messageCSPs[i]
-                val (patChar, patStyle) = patternCSPs[i]
-
-                logger.debug("{} {} {}", msgChar, msgStyle, patStyle)
-
-                if (msgChar != patChar) {
-                    logger.info("Pattern '$pattern'$msgChar didn't match '$messageContent'$patChar")
-                    return@forEach
-                }
-
-                messageCSPs[i] = Pair(msgChar, patStyle.withParent(msgStyle))
-            }
-
-
-            var groupId = 0
-            var previousStyle = Style.EMPTY
-
-            val styledText = messageCSPs.groupingBy { (_, style) ->
-                if (style != previousStyle) {
-                    previousStyle = style
-                    ++groupId
-                } else groupId
-            }.aggregate { _, seg: Pair<StringBuilder, Style>?, (char, style), first ->
-                if (first) Pair(StringBuilder().append(char), style)
-                else {
-                    seg!!.first.append(char)
-                    seg
-                }
-            }.values.flatMap { (sb, style) -> Text.literal(sb.toString()).getWithStyle(style) }
-                .fold(Text.empty()) { acc: MutableText, text: Text -> acc.append(text) }
-
-            logger.info(styledText.string)
-
-            return styledText
+            messageCSPs[i] = Pair(msgChar, patStyle.withParent(msgStyle))
         }
 
-        return message
+        return true
+    }
+
+    private fun aggregateCSPs(messageCSPs: MutableList<Pair<Char, Style>>): Text {
+        var groupId = 0
+        var previousStyle = Style.EMPTY
+
+        return messageCSPs.groupingBy { (_, style) ->
+            if (style != previousStyle) {
+                previousStyle = style
+                ++groupId
+            } else groupId
+        }.aggregate { _, seg: Pair<StringBuilder, Style>?, (char, style), first ->
+            if (first) Pair(StringBuilder().append(char), style)
+            else {
+                seg!!.first.append(char)
+                seg
+            }
+        }.values.flatMap { (sb, style) -> Text.literal(sb.toString()).getWithStyle(style) }
+            .fold(Text.empty()) { acc: MutableText, text: Text -> acc.append(text) }
     }
 
 }
