@@ -8,9 +8,26 @@ object Utils {
         return styleFromString(string, MinecraftStyle.EMPTY)
     }
 
+    val strippedStyle: MinecraftStyle = MinecraftStyle.EMPTY
+        .withBold(false)
+        .withItalic(false)
+        .withUnderline(false)
+        .withStrikethrough(false)
+        .withObfuscated(false)
+
     fun styleFromString(string: String, defaultStyle: MinecraftStyle): MinecraftStyle {
         var style = defaultStyle
-        val args = string.split(",").map { it.trim().lowercase() }
+
+        val args = string.split(",")
+            .map { it.trim().lowercase() }
+            .filter {
+                if (it == "!") {
+                    style = strippedStyle
+                    false
+                } else {
+                    true
+                }
+            }
 
         for (arg in args) {
             val opt = !arg.startsWith("!")
