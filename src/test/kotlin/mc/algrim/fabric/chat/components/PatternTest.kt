@@ -1,8 +1,8 @@
-import mc.algrim.fabric.chat.components.Pattern
+package mc.algrim.fabric.chat.components
+
 import kotlin.test.Test
 
 class PatternTest {
-
     @Test
     fun test() {
         val pattern = Pattern.fromString("This is\\[ a [green](test) /pa(t)+ern/ things")

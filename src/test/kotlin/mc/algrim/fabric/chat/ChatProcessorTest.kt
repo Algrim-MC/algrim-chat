@@ -1,3 +1,5 @@
+package mc.algrim.fabric.chat
+
 import mc.algrim.fabric.chat.components.Pattern
 import kotlin.system.measureTimeMillis
 import kotlin.test.Test
