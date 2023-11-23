@@ -12,9 +12,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(ChatHud.class)
 public class ChatHudMixin {
     @ModifyVariable(
-            method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V",
-            at = @At("HEAD"),
-            argsOnly = true
+        method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V",
+        at = @At("HEAD"),
+        argsOnly = true
     )
     private Text onClientChat(Text message) {
         try {
