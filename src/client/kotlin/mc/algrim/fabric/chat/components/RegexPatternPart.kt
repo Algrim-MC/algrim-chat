@@ -50,20 +50,3 @@ class RegexPatternPart(override val pattern: String, override val index: Int) : 
         override val closeChar = '/'
     }
 }
-
-
-//        val regexStringBuilder = StringBuilder()
-//
-//        for ((i, char) in chars.withIndex()) {
-//            val isLiteral = if (i > 0) chars[i - 1] != '\\' else false
-//
-//            if (i == 0 && char != openChar)
-//                throw IllegalArgumentException("String value '$messageContent', invalid open char, should be '${StyleTextPart.openChar}'")
-//
-//            if (!isLiteral) {
-//                if (char == '\\') continue
-//                else if (char == closeChar) break
-//            }
-//
-//            regexStringBuilder.append(char)
-//        }
