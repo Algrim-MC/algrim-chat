@@ -7,7 +7,7 @@ import fi.dy.masa.malilib.gui.button.IButtonActionListener
 import mc.algrim.fabric.chat.AlgrimChatClient.MOD_ID
 import mc.algrim.fabric.chat.config.Config
 
-class ConfigGui : GuiConfigsBase(10, 50, MOD_ID, null, "ChatSaid Configs") {
+class ConfigGui : GuiConfigsBase(10, 50, MOD_ID, null, "AlgrimChat Configs") {
 
     private var currentTab: Tab = Tab.GLOBAL
 
