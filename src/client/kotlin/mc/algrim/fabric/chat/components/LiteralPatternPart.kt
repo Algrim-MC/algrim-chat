@@ -15,11 +15,15 @@ class LiteralPatternPart(
     init {
         val remainder = pattern.substring(index)
         val stringLiteralBuilder = StringBuilder()
+        var escapeCharCount = 0
 
         for ((i, char) in remainder.toCharArray().withIndex()) {
             val escaped = if (i > 0) remainder[i - 1] == '\\' else false
 
-            if (!escaped && char == '\\') continue
+            if (!escaped && char == '\\') {
+                escapeCharCount++
+                continue
+            }
 
             if (!escaped && untilChars.contains(char)) {
                 break
@@ -29,7 +33,7 @@ class LiteralPatternPart(
         }
 
         this.value = stringLiteralBuilder.toString()
-        this.length = value.length
+        this.length = this.value.length + escapeCharCount
     }
 
     override fun apply(messageContent: String, startIndex: Int): String? {
