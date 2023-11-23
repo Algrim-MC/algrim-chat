@@ -1,20 +1,16 @@
 package mc.algrim.fabric.chat.config
 
-import com.google.common.collect.ImmutableList
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import fi.dy.masa.malilib.config.ConfigUtils
 import fi.dy.masa.malilib.config.IConfigBase
 import fi.dy.masa.malilib.config.IConfigHandler
-import fi.dy.masa.malilib.config.options.ConfigStringList
 import fi.dy.masa.malilib.util.JsonUtils
 import java.io.File
 
-open class ConfigFile(val configFile: File) : IConfigHandler {
+abstract class ConfigFile(val configFile: File) : IConfigHandler {
 
-    val patterns = ConfigStringList("patterns", ImmutableList.of(), "Style patterns for chat on this server.")
-    open val chatOptions = listOf<IConfigBase>(patterns)
-    open val categories: Map<String, List<IConfigBase>> = mapOf("Chat" to listOf(patterns))
+    abstract val categories: Map<String, List<IConfigBase>>
 
     override fun load() {
         if (configFile.exists() && configFile.isFile() && configFile.canRead()) {

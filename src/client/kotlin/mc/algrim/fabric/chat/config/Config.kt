@@ -1,7 +1,9 @@
 package mc.algrim.fabric.chat.config
 
+import fi.dy.masa.malilib.gui.Message
 import fi.dy.masa.malilib.interfaces.IWorldLoadListener
 import fi.dy.masa.malilib.util.FileUtils
+import fi.dy.masa.malilib.util.InfoUtils
 import fi.dy.masa.malilib.util.StringUtils
 import mc.algrim.fabric.chat.AlgrimChatClient
 import mc.algrim.fabric.chat.AlgrimChatClient.MOD_ID
@@ -12,9 +14,8 @@ import net.minecraft.client.world.ClientWorld
 import java.io.File
 
 object Config : IWorldLoadListener {
-    val globalConfig = ConfigFile(getGlobalConfigFile())
+    val globalConfig = GlobalConfigFile(getGlobalConfigFile())
     var serverConfig: ServerConfigFile? = null
-
 
     fun reloadPatterns(serverConfig: ServerConfigFile) {
         val effectivePatternStrings = ArrayList<String>()
@@ -28,6 +29,11 @@ object Config : IWorldLoadListener {
             try {
                 Pattern.fromString(it)
             } catch (e: IllegalArgumentException) {
+                InfoUtils.showGuiOrActionBarMessage(
+                    Message.MessageType.ERROR,
+                    8000,
+                    "Error initializing pattern \"$it\"."
+                )
                 AlgrimChatClient.logger.error("Error initializing pattern!", e)
                 null
             }

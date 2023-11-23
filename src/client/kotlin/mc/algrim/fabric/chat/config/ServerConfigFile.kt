@@ -1,15 +1,18 @@
 package mc.algrim.fabric.chat.config
 
+import com.google.common.collect.ImmutableList
 import fi.dy.masa.malilib.config.IConfigBase
 import fi.dy.masa.malilib.config.options.ConfigBoolean
+import fi.dy.masa.malilib.config.options.ConfigStringList
 import java.io.File
 
 class ServerConfigFile(configFile: File) : ConfigFile(configFile) {
 
+    val patterns = ConfigStringList("patterns", ImmutableList.of(), "Style patterns for chat on this server.")
     val useGlobal = ConfigBoolean("useGlobal", true, "Whether global patterns apply on this server.")
 
-    override val chatOptions = listOf<IConfigBase>(useGlobal, super.patterns)
+    val chatOptions = listOf<IConfigBase>(useGlobal, patterns)
 
-    override val categories = mapOf("Chat" to chatOptions)
+    override val categories: Map<String, List<IConfigBase>> = mapOf("Chat" to chatOptions)
 
 }
