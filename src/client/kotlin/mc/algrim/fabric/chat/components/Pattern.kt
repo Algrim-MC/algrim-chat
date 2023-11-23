@@ -3,13 +3,6 @@ package mc.algrim.fabric.chat.components
 import net.minecraft.text.Style
 
 
-fun main() {
-    val pattern = Pattern.fromString("This is\\[ a [green](test) /pa(t)+ern/ things")
-    val vanillaPattern = Pattern.fromString("<[#0000FF](/[0-Z]+/)> [#FF0000](/.*/)")
-    val transformed = vanillaPattern.applyTransforms("<Sainty97> penises")
-    println(pattern.parts.joinToString("|") { it.value })
-}
-
 class Pattern(val parts: Array<PatternPart>) {
     fun applyTransforms(content: String): String? {
         var i = 0
