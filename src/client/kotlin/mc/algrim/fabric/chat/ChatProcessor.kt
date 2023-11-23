@@ -8,13 +8,20 @@ import net.minecraft.text.Text
 import java.util.*
 
 fun main() {
+//    val pattern =
+//        Pattern.fromString("test")
+
+
     val pattern =
         Pattern.fromString("[#821212](/\\(Mod |God |Goddess |Demigod |Archangel |Angel |Mortal \\)?/)[#00FFFF](/\\\\w+/)[#909090](/[^→]*/)→ [white,!i,!b](/.*/)")
 
+//    val charStylePairs = pattern.toCharStylePair("testp")
 //    val charStylePairs = pattern.toCharStylePair("Player Title 30 → Stuff Player says")
 //    val charStylePairs = pattern.toCharStylePair("God Player Title 30 → Stuff Player says")
 //    val charStylePairs = pattern.toCharStylePair("[Local] Player → Stuff Player says")
     val charStylePairs = pattern.toCharStylePair("Sainty A Title 25 → samee")
+
+    pattern.parts.forEach { println("${it::class.simpleName} ${it.value}") }
 
     charStylePairs?.forEach { (char, style) ->
         println("$char $style")

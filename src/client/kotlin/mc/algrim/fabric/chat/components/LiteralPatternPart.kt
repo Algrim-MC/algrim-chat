@@ -14,22 +14,22 @@ class LiteralPatternPart(
 
     init {
         val remainder = pattern.substring(index)
-        var partLength = 0
+        val stringLiteralBuilder = StringBuilder()
 
         for ((i, char) in remainder.toCharArray().withIndex()) {
             val escaped = if (i > 0) remainder[i - 1] == '\\' else false
 
+            if (!escaped && char == '\\') continue
+
             if (!escaped && untilChars.contains(char)) {
-                partLength = i
                 break
-            } else if (i + 1 == remainder.length) {
-                partLength = i + 1
             }
 
+            stringLiteralBuilder.append(char)
         }
 
-        this.length = partLength
-        this.value = remainder.substring(0, length)
+        this.value = stringLiteralBuilder.toString()
+        this.length = value.length
     }
 
     override fun apply(messageContent: String, startIndex: Int): String? {
