@@ -4,9 +4,9 @@ import net.minecraft.text.TextColor
 import net.minecraft.text.Style as MinecraftStyle
 
 object Utils {
-    fun styleFromString(string: String): MinecraftStyle {
-        return styleFromString(string, MinecraftStyle.EMPTY)
-    }
+//    fun styleFromString(string: String): MinecraftStyle {
+//        return styleFromString(string, MinecraftStyle.EMPTY)
+//    }
 
     val strippedStyle: MinecraftStyle = MinecraftStyle.EMPTY
         .withBold(false)
@@ -15,7 +15,7 @@ object Utils {
         .withStrikethrough(false)
         .withObfuscated(false)
 
-    fun styleFromString(string: String, defaultStyle: MinecraftStyle): MinecraftStyle {
+    fun styleFromString(string: String, defaultStyle: MinecraftStyle = MinecraftStyle.EMPTY): MinecraftStyle {
         var style = defaultStyle
 
         val args = string.split(",")
