@@ -65,7 +65,10 @@ object Config : IWorldLoadListener {
 
     override fun onWorldLoadPost(worldBefore: ClientWorld?, worldAfter: ClientWorld?, mc: MinecraftClient) {
         if (worldBefore == null && worldAfter != null) {
-            serverConfig = ServerConfigFile(getServerConfigFile())
+            val newServerConfig = ServerConfigFile(getServerConfigFile())
+            serverConfig = newServerConfig
+
+            reloadPatterns(newServerConfig)
         }
     }
 }
