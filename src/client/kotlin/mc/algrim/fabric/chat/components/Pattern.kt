@@ -21,6 +21,7 @@ import net.minecraft.text.Style
 
 
 class Pattern(val parts: Array<PatternPart>) {
+
     fun applyTransforms(content: String): String? {
         var i = 0
         val transformedPattern = StringBuilder()
@@ -66,6 +67,7 @@ class Pattern(val parts: Array<PatternPart>) {
     }
 
     companion object {
+
         fun fromString(patternString: String): Pattern {
             val parts = mutableListOf<PatternPart>()
             var i = 0

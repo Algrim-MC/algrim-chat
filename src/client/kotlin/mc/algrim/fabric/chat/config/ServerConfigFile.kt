@@ -24,7 +24,6 @@ import fi.dy.masa.malilib.config.options.ConfigStringList
 import java.io.File
 
 class ServerConfigFile(configFile: File) : ConfigFile(configFile) {
-
     val patterns = ConfigStringList("patterns", ImmutableList.of(), "Style patterns for chat on this server.")
     val useGlobal = ConfigBoolean("useGlobal", true, "Style patterns to be used on this server.")
 
@@ -36,5 +35,4 @@ class ServerConfigFile(configFile: File) : ConfigFile(configFile) {
         // Loading manually when joining server.
         this.load()
     }
-
 }

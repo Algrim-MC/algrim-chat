@@ -108,5 +108,4 @@ object ChatProcessor {
         }.values.flatMap { (sb, style) -> Text.literal(sb.toString()).getWithStyle(style) }
             .fold(Text.empty()) { acc: MutableText, text: Text -> acc.append(text) }
     }
-
 }

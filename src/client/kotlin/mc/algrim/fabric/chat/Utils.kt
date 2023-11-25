@@ -21,10 +21,6 @@ import net.minecraft.text.TextColor
 import net.minecraft.text.Style as MinecraftStyle
 
 object Utils {
-//    fun styleFromString(string: String): MinecraftStyle {
-//        return styleFromString(string, MinecraftStyle.EMPTY)
-//    }
-
     val strippedStyle: MinecraftStyle = MinecraftStyle.EMPTY
         .withBold(false)
         .withItalic(false)

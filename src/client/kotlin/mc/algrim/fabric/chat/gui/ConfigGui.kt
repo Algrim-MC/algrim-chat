@@ -25,9 +25,7 @@ import mc.algrim.fabric.chat.AlgrimChatClient.MOD_ID
 import mc.algrim.fabric.chat.config.Config
 
 class ConfigGui : GuiConfigsBase(10, 50, MOD_ID, null, "AlgrimChat Configs") {
-
     private var currentTab: Tab = Tab.GLOBAL
-
     private val stdMargin = 10
 
     override fun initGui() {
@@ -77,7 +75,6 @@ class ConfigGui : GuiConfigsBase(10, 50, MOD_ID, null, "AlgrimChat Configs") {
             gui.getListWidget()?.resetScrollbarPosition()
             gui.initGui()
         }
-
     }
 
     enum class Tab(val displayName: String) {

@@ -23,6 +23,7 @@ import mc.algrim.fabric.chat.AlgrimChatClient.MOD_NAME
 import mc.algrim.fabric.chat.config.Config
 
 object InputHandler : IKeybindProvider {
+
     override fun addKeysToMap(manager: IKeybindManager) {
         manager.addKeybindToMap(Config.globalConfig.configGuiHotKey.keybind)
     }

@@ -26,7 +26,6 @@ import fi.dy.masa.malilib.util.JsonUtils
 import java.io.File
 
 abstract class ConfigFile(val configFile: File) : IConfigHandler {
-
     abstract val categories: Map<String, List<IConfigBase>>
 
     override fun load() {
@@ -53,5 +52,4 @@ abstract class ConfigFile(val configFile: File) : IConfigHandler {
             JsonUtils.writeJsonToFile(root, configFile)
         }
     }
-
 }

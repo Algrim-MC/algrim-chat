@@ -25,7 +25,6 @@ import fi.dy.masa.malilib.config.options.ConfigStringList
 import java.io.File
 
 class GlobalConfigFile(configFile: File) : ConfigFile(configFile) {
-
     val enabled = ConfigBoolean("enabled", true, "Enable chat styling")
     val patterns = ConfigStringList("patterns", ImmutableList.of(), "Style patterns to be used globally")
     val configGuiHotKey = ConfigHotkey("openConfigGui", "Y,C", "The hotkey used to open the config gui")
@@ -33,5 +32,4 @@ class GlobalConfigFile(configFile: File) : ConfigFile(configFile) {
     val chatOptions = listOf<IConfigBase>(enabled, configGuiHotKey, patterns)
 
     override val categories = mapOf("Chat" to chatOptions)
-
 }
