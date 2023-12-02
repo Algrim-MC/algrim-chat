@@ -3,7 +3,7 @@
   "id": "${mod_id}",
   "version": "${version}",
   "name": "Algrim Chat",
-  "description": "Allows clients to style chat on servers.",
+  "description": "A chat styling mod for clients",
   "authors": [
     "Algrim"
   ],
