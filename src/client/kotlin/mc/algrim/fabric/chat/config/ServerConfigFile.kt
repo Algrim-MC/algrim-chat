@@ -25,7 +25,7 @@ import java.io.File
 
 class ServerConfigFile(configFile: File) : ConfigFile(configFile) {
     val patterns = ConfigStringList("patterns", ImmutableList.of(), "Style patterns for chat on this server.")
-    val useGlobal = ConfigBoolean("useGlobal", true, "Style patterns to be used on this server.")
+    val useGlobal = ConfigBoolean("useGlobal", true, "Whether global patterns should be used on this server.")
 
     val chatOptions = listOf<IConfigBase>(useGlobal, patterns)
 
