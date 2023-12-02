@@ -48,9 +48,9 @@ object Utils {
             style = when (if (opt) arg else arg.substring(1)) {
                 "bold", "b" -> style.withBold(opt)
                 "italic", "it", "i" -> style.withItalic(opt)
-                "underlined", "u" -> style.withUnderline(opt)
+                "underline", "u" -> style.withUnderline(opt)
                 "strikethrough", "s" -> style.withStrikethrough(opt)
-                "obfuscated", "o" -> style.withObfuscated(opt)
+                "obfuscate", "o" -> style.withObfuscated(opt)
                 else -> style.withColor(TextColor.parse(arg))
             }
         }
