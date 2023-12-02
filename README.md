@@ -15,7 +15,7 @@ should be styled, and how to style them.
 
 ## Configuration
 
-Config GUI can be opened with `Y,C`, by default.
+Config GUI can be opened with `R,C`, by default.
 
 ## Patterns
 
