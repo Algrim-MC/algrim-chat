@@ -43,11 +43,11 @@ Patterns consist of three components:
   Regex pattern parts are denoted by a `/` at the beginning and end.
 
   #### Example Patterns:
-  | Pattern                          | Message                          | Matches | Note                                                                        |
-  |----------------------------------|----------------------------------|:-------:|-----------------------------------------------------------------------------|
-  | <nobr>`/You leveled up!/`</nobr> | <nobr>"You leveled up!"</nobr>   |    ✅    | While regex can match static messages, it's often simpler to use a Literal. |
-  | <nobr>`/.*/`</nobr>              | <nobr>"\<Player6> Hello"</nobr>  |    ✅    | Will technically match all messages.                                        |
-  | <nobr>`</\\w+/> /.*/`</nobr>     | <nobr>"\<Player6> Bye"</nobr>    |    ✅    | Here we are using a combination of Literal "<" and "> ", and Regex parts.   |
+  | Pattern             | Message            | Matches | Note                                                                        |
+  |---------------------|--------------------|:-------:|-----------------------------------------------------------------------------|
+  | `/You leveled up!/` | "You leveled up!"  |    ✅    | While regex can match static messages, it's often simpler to use a Literal. |
+  | `/.*/`              | "\<Player6> Hello" |    ✅    | Will technically match all messages.                                        |
+  | `</\\w+/> /.*/`     | "\<Player6> Bye"   |    ✅    | Here we are using a combination of Literal "<" and "> ", and Regex parts.   |
 
 - ### Style
 
@@ -59,10 +59,10 @@ Patterns consist of three components:
 
   #### Example Patterns:
 
-  | Pattern                                            | Message                          | Matches | Note                                                        |
-  |----------------------------------------------------|----------------------------------|:-------:|-------------------------------------------------------------|
-  | <nobr>`[green](You leveled up!)`</nobr>            | <nobr>"You leveled up!"</nobr>   |    ✅    | Styles the message green.                                   |
-  | <nobr>`<[#00FFFF](/\\w+/)> [white,i](/.*/)`</nobr> | <nobr>"\<Player6> Hello"</nobr>  |    ✅    | Styles the player's name in aqua and their message *white*. |
+  | Pattern                               | Message             | Matches | Note                                                        |
+  |---------------------------------------|---------------------|:-------:|-------------------------------------------------------------|
+  | `[green](You leveled up!)`            | "You leveled up!"   |    ✅    | Styles the message green.                                   |
+  | `<[#00FFFF](/\\w+/)> [white,i](/.*/)` | "\<Player6> Hello"  |    ✅    | Styles the player's name in aqua and their message *white*. |
 
 ## Style Overrides
 
