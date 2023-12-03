@@ -93,8 +93,7 @@ class StylePatternPart(override val pattern: String, override val index: Int) : 
         this.valuePattern = Pattern.fromString(value)
     }
 
-
-    companion object : PatternPart.Parentheses {
+    companion object : PatternPart.Delimiters {
         val styleOpenChar = '['
         val styleCloseChar = ']'
         val valueOpenChar = '('

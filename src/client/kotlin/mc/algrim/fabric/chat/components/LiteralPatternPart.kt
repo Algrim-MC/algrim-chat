@@ -67,7 +67,7 @@ class LiteralPatternPart(
         return apply(messageContent, startIndex)?.map { it to Style.EMPTY }?.toTypedArray()
     }
 
-    companion object : PatternPart.Parentheses {
+    companion object : PatternPart.Delimiters {
         override val openChar = null
         override val closeChar = null
     }

@@ -62,7 +62,7 @@ class RegexPatternPart(override val pattern: String, override val index: Int) : 
         return apply(messageContent, startIndex)?.map { it to Style.EMPTY }?.toTypedArray()
     }
 
-    companion object : PatternPart.Parentheses {
+    companion object : PatternPart.Delimiters {
         override val openChar = '/'
         override val closeChar = '/'
     }

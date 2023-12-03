@@ -28,7 +28,7 @@ interface PatternPart {
     fun apply(messageContent: String, startIndex: Int): String?
     fun toCharStylePair(messageContent: String, startIndex: Int): Array<Pair<Char, Style>>?
 
-    interface Parentheses {
+    interface Delimiters {
         val openChar: Char?
         val closeChar: Char?
     }
