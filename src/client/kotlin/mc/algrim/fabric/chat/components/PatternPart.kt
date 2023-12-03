@@ -24,8 +24,29 @@ interface PatternPart {
     val index: Int
     val value: String
     val length: Int
+
+    /**
+     * Determine if [string] matches this [PatternPart].
+     */
     fun matches(string: String): Boolean
+
+    /**
+     * Applies this [PatternPart] to [messageContent] at a given [startIndex].
+     *
+     * @param messageContent to be applied to this [PatternPart].
+     * @param startIndex the index at which this PatternPart should be applied.
+     * @return the matching segment of [messageContent], or null if there was no match.
+     */
     fun apply(messageContent: String, startIndex: Int): String?
+
+    /**
+     * Applies this [PatternPart] to [messageContent] at a given [startIndex].
+     *
+     * @param messageContent to be applied to this [PatternPart].
+     * @param startIndex the index at which this PatternPart should be applied.
+     * @return an array of Chars corresponding to the matching segment of [messageContent]
+     * Paired to this [PatternPart]'s [Style]
+     */
     fun toCharStylePair(messageContent: String, startIndex: Int): Array<Pair<Char, Style>>?
 
     interface Delimiters {
