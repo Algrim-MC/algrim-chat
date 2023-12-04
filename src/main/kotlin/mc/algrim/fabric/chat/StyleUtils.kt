@@ -20,7 +20,7 @@ package mc.algrim.fabric.chat
 import net.minecraft.text.TextColor
 import net.minecraft.text.Style as MinecraftStyle
 
-object Utils {
+object StyleUtils {
     val strippedStyle: MinecraftStyle = MinecraftStyle.EMPTY
         .withBold(false)
         .withItalic(false)

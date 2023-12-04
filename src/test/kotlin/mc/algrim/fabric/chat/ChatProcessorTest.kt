@@ -44,9 +44,9 @@ class ChatProcessorTest {
 
         val expectedTestMsgStyles = listOf(
             "[MOD] " to Style.EMPTY.withColor(TextColor.parse("#821212")),
-            "Barry" to Utils.strippedStyle.withColor(TextColor.parse("#00FFFF")),
+            "Barry" to StyleUtils.strippedStyle.withColor(TextColor.parse("#00FFFF")),
             ": " to Style.EMPTY,
-            "Stuff a mod named Barry would say." to Utils.strippedStyle.withColor(TextColor.parse("white"))
+            "Stuff a mod named Barry would say." to StyleUtils.strippedStyle.withColor(TextColor.parse("white"))
         )
 
         val expectedTestMsg2Styles = listOf(
