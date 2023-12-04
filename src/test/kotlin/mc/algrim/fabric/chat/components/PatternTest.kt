@@ -18,13 +18,26 @@
 package mc.algrim.fabric.chat.components
 
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class PatternTest {
     @Test
-    fun test() {
-        val pattern = Pattern.fromString("This is\\[ a [green](test) /pa(t)+ern/ things")
-        val vanillaPattern = Pattern.fromString("<[#0000FF](/[0-Z]+/)> [#FF0000](/.*/)")
-        val transformed = vanillaPattern.applyTransforms("<Sainty97> penises")
-        println(pattern.parts.joinToString("|") { it.value })
+    fun testPattern() {
+        val patternPartsValue = patternValueFromString("This is \\[ a [green](test) /pa(t)+ern/")
+        val expectedPartsValue = "This is [ a |test| |pa(t)+ern"
+
+        println(patternPartsValue)
+        assertEquals(expectedPartsValue, patternPartsValue)
     }
+
+    @Test
+    fun testVanillaChatPattern() {
+        val patternPartsValue = patternValueFromString("<[#0000FF](/[0-Z]+/)> [#FF0000](/.*/)")
+        val expectedPartsValue = "<|[0-Z]+|> |.*"
+
+        assertEquals(expectedPartsValue, patternPartsValue)
+    }
+
+    private fun patternValueFromString(patternStr: String) =
+        Pattern.fromString(patternStr).parts.joinToString("|") { it.value }
 }

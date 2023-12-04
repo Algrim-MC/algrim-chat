@@ -18,39 +18,58 @@
 package mc.algrim.fabric.chat
 
 import mc.algrim.fabric.chat.components.Pattern
-import kotlin.system.measureTimeMillis
+import net.minecraft.text.Style
+import net.minecraft.text.Text
+import net.minecraft.text.TextColor
+import java.util.*
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 
 class ChatProcessorTest {
     @Test
     fun test() {
-//    val pattern =
-//        Pattern.fromString("test")
+        // Some sample messages
+        // [MOD] Barry: Stuff a mod named Barry would say.
+        // Carl: Stuff a player named Barry would say.
+        val testMsg =
+            Text.literal("[MOD]").append(" ").append("Barry").append(": ").append("Stuff a mod named Barry would say.")
+        val testMsg2 = Text.literal("Carl").append(": ").append("Stuff a player named Carl would say.")
 
+        val testPattern = Pattern.fromString("[#821212](/(\\\\[MOD] \\)?/)[!,#00FFFF](/\\\\w+/): [!,white](/.*/)")
+        ChatProcessor.enabled = true
+        ChatProcessor.patterns.add(testPattern)
 
-//    val pattern =
-//        Pattern.fromString("\\[[#821212](/\\(Mod |God |Goddess |Demigod |Archangel |Angel |Mortal \\)?/)[#00FFFF](/\\\\w+/)[#909090](/[^→]*/)→ [white,!i,!b](/.*/)")
+        val styledTestMsg = ChatProcessor.execute(testMsg)
+        val styledTestMsg2 = ChatProcessor.execute(testMsg2)
 
-        val pattern =
-            Pattern.fromString("\\[-] [red](/.*/)")
-
-//    val charStylePairs = pattern.toCharStylePair("testp")
-//    val charStylePairs = pattern.toCharStylePair("Player Title 30 → Stuff Player says")
-//    val charStylePairs = pattern.toCharStylePair("God Player Title 30 → Stuff Player says")
-//    val charStylePairs = pattern.toCharStylePair("[Local] Player → Stuff Player says")
-//    val charStylePairs = pattern.toCharStylePair("[Sainty A Title 25 → samee")
-        val charStylePairs = pattern.toCharStylePair("[-] Player left the game")
-
-        pattern.parts.forEach { println("${it::class.simpleName} ${it.value}") }
-
-        println(
-            "in ${
-                measureTimeMillis {
-                    charStylePairs?.forEach { (char, style) ->
-                        println("$char $style")
-                    } ?: println("No match")
-                }
-            }ms"
+        val expectedTestMsgStyles = listOf(
+            "[MOD] " to Style.EMPTY.withColor(TextColor.parse("#821212")),
+            "Barry" to Utils.strippedStyle.withColor(TextColor.parse("#00FFFF")),
+            ": " to Style.EMPTY,
+            "Stuff a mod named Barry would say." to Utils.strippedStyle.withColor(TextColor.parse("white"))
         )
+
+        val expectedTestMsg2Styles = listOf(
+            "Carl" to Style.EMPTY.withColor(TextColor.parse("#00FFFF")),
+            ": " to Style.EMPTY,
+            "Stuff a player named Carl would say." to Style.EMPTY.withColor(TextColor.parse("white"))
+        )
+
+        val actualTestMsgStyles = mutableListOf<Pair<String, Style>>()
+        val actualTestMsg2Styles = mutableListOf<Pair<String, Style>>()
+
+        styledTestMsg.visit({ style: Style, content: String ->
+            println("$content $style")
+            actualTestMsgStyles.add(content to style)
+            Optional.empty<Any?>()
+        }, Style.EMPTY)
+
+        styledTestMsg2.visit({ style: Style, content: String ->
+            actualTestMsg2Styles.add(content to style)
+            Optional.empty<Any?>()
+        }, Style.EMPTY)
+
+        assertContentEquals(expectedTestMsgStyles, actualTestMsgStyles)
+        assertContentEquals(expectedTestMsg2Styles, actualTestMsg2Styles)
     }
 }

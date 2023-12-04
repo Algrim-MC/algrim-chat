@@ -87,10 +87,10 @@ class StylePatternPart(override val pattern: String, override val index: Int) : 
             valueStringBuilder.append(char)
         }
 
-        this.value = valueStringBuilder.toString()
+        this.valuePattern = Pattern.fromString(valueStringBuilder.toString())
+        this.value = valuePattern.parts.joinToString("") { it.value }
         this.style = styleStringBuilder.toString()
         this.length = partLength
-        this.valuePattern = Pattern.fromString(value)
     }
 
     companion object : PatternPart.Delimiters {

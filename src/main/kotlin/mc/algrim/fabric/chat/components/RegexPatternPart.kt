@@ -43,7 +43,7 @@ class RegexPatternPart(override val pattern: String, override val index: Int) : 
                 break
             }
 
-            if (i == remainder.length) {
+            if (i == remainder.length - 1) {
                 throw IllegalArgumentException("Pattern '$pattern', is invalid. Unexpected end of pattern.")
             }
         }
