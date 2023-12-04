@@ -17,12 +17,19 @@
 
 package mc.algrim.fabric.chat
 
+import fi.dy.masa.malilib.config.ConfigManager
 import fi.dy.masa.malilib.event.InitializationHandler
+import fi.dy.masa.malilib.event.InputEventHandler
+import fi.dy.masa.malilib.event.WorldLoadHandler
+import fi.dy.masa.malilib.interfaces.IInitializationHandler
+import mc.algrim.fabric.chat.config.Config
+import mc.algrim.fabric.chat.input.InputHandler
+import mc.algrim.fabric.chat.input.KeyCallbacks
 import net.fabricmc.api.ClientModInitializer
 import org.slf4j.LoggerFactory
 
 
-object AlgrimChat : ClientModInitializer {
+object AlgrimChat : ClientModInitializer, IInitializationHandler {
     const val MOD_ID = "algrim-chat"
     const val MOD_NAME = "AlgrimChat"
 
@@ -32,6 +39,16 @@ object AlgrimChat : ClientModInitializer {
     val logger = LoggerFactory.getLogger(MOD_ID)!!
 
     override fun onInitializeClient() {
-        InitializationHandler.getInstance().registerInitializationHandler(InitHandler())
+        InitializationHandler.getInstance().registerInitializationHandler(this)
+    }
+
+    override fun registerModHandlers() {
+        ConfigManager.getInstance().registerConfigHandler(MOD_ID, Config.globalConfig)
+        InputEventHandler.getKeybindManager().registerKeybindProvider(InputHandler)
+
+        WorldLoadHandler.getInstance().registerWorldLoadPreHandler(Config)
+        WorldLoadHandler.getInstance().registerWorldLoadPostHandler(Config)
+
+        KeyCallbacks
     }
 }
