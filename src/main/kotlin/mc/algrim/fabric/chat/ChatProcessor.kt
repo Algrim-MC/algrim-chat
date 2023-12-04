@@ -17,7 +17,7 @@
 
 package mc.algrim.fabric.chat
 
-import mc.algrim.fabric.chat.AlgrimChatClient.logger
+import mc.algrim.fabric.chat.AlgrimChat.logger
 import mc.algrim.fabric.chat.components.Pattern
 import net.minecraft.text.MutableText
 import net.minecraft.text.Style

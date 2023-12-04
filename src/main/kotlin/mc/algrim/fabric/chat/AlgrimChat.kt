@@ -22,7 +22,7 @@ import net.fabricmc.api.ClientModInitializer
 import org.slf4j.LoggerFactory
 
 
-object AlgrimChatClient : ClientModInitializer {
+object AlgrimChat : ClientModInitializer {
     const val MOD_ID = "algrim-chat"
     const val MOD_NAME = "AlgrimChat"
 

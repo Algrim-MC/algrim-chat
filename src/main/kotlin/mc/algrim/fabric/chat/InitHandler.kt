@@ -21,7 +21,7 @@ import fi.dy.masa.malilib.config.ConfigManager
 import fi.dy.masa.malilib.event.InputEventHandler
 import fi.dy.masa.malilib.event.WorldLoadHandler
 import fi.dy.masa.malilib.interfaces.IInitializationHandler
-import mc.algrim.fabric.chat.AlgrimChatClient.MOD_ID
+import mc.algrim.fabric.chat.AlgrimChat.MOD_ID
 import mc.algrim.fabric.chat.config.Config
 import mc.algrim.fabric.chat.input.InputHandler
 import mc.algrim.fabric.chat.input.KeyCallbacks

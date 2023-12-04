@@ -15,9 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mc.algrim.mixin.client;
+package mc.algrim.fabric.chat.mixin;
 
-import mc.algrim.fabric.chat.AlgrimChatClient;
+import mc.algrim.fabric.chat.AlgrimChat;
 import mc.algrim.fabric.chat.ChatProcessor;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.Text;
@@ -38,7 +38,7 @@ public class ChatHudMixin {
         try {
             return ChatProcessor.INSTANCE.execute(message);
         } catch (Exception e) {
-            AlgrimChatClient.getLogger().error("There was an error applying style", e);
+            AlgrimChat.getLogger().error("There was an error applying style", e);
             return message;
         }
     }

@@ -17,14 +17,14 @@
   "entrypoints": {
     "client": [
       {
-        "value": "mc.algrim.fabric.chat.AlgrimChatClient",
+        "value": "mc.algrim.fabric.chat.AlgrimChat",
         "adapter": "kotlin"
       }
     ]
   },
   "mixins": [
     {
-      "config": "algrim-chat.client.mixins.json",
+      "config": "algrim-chat.mixins.json",
       "environment": "client"
     }
   ],

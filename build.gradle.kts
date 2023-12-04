@@ -17,23 +17,6 @@ repositories {
     maven { url = uri("https://masa.dy.fi/maven") }
 }
 
-loom {
-    splitEnvironmentSourceSets()
-
-    mods.create(project.name) {
-        sourceSet("client")
-    }
-}
-
-sourceSets {
-    test {
-        compileClasspath += sourceSets["client"].compileClasspath
-        compileClasspath += sourceSets["client"].output
-        runtimeClasspath += sourceSets["client"].runtimeClasspath
-        runtimeClasspath += sourceSets["client"].output
-    }
-}
-
 dependencies {
     minecraft("com.mojang:minecraft:${project.properties["minecraft_version"]}")
     mappings("net.fabricmc:yarn:${project.properties["yarn_mappings"]}:v2")

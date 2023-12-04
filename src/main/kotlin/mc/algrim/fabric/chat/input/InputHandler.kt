@@ -19,7 +19,7 @@ package mc.algrim.fabric.chat.input
 
 import fi.dy.masa.malilib.hotkeys.IKeybindManager
 import fi.dy.masa.malilib.hotkeys.IKeybindProvider
-import mc.algrim.fabric.chat.AlgrimChatClient.MOD_NAME
+import mc.algrim.fabric.chat.AlgrimChat.MOD_NAME
 import mc.algrim.fabric.chat.config.Config
 
 object InputHandler : IKeybindProvider {

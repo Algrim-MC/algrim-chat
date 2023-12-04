@@ -22,8 +22,8 @@ import fi.dy.masa.malilib.interfaces.IWorldLoadListener
 import fi.dy.masa.malilib.util.FileUtils
 import fi.dy.masa.malilib.util.InfoUtils
 import fi.dy.masa.malilib.util.StringUtils
-import mc.algrim.fabric.chat.AlgrimChatClient
-import mc.algrim.fabric.chat.AlgrimChatClient.MOD_ID
+import mc.algrim.fabric.chat.AlgrimChat
+import mc.algrim.fabric.chat.AlgrimChat.MOD_ID
 import mc.algrim.fabric.chat.ChatProcessor
 import mc.algrim.fabric.chat.components.Pattern
 import net.minecraft.client.MinecraftClient
@@ -52,7 +52,7 @@ object Config : IWorldLoadListener {
                     8000,
                     "Error initializing pattern \"$it\"."
                 )
-                AlgrimChatClient.logger.error("Error initializing pattern!", e)
+                AlgrimChat.logger.error("Error initializing pattern!", e)
                 null
             }
         }
@@ -70,7 +70,7 @@ object Config : IWorldLoadListener {
         val configDir = File(FileUtils.getConfigDirectory(), MOD_ID)
 
         if (!configDir.exists() && !configDir.mkdirs()) {
-            AlgrimChatClient.logger.error("Unable to create config directory! '${configDir.path}'")
+            AlgrimChat.logger.error("Unable to create config directory! '${configDir.path}'")
         }
 
         return File(configDir, StringUtils.getStorageFileName(true, "", ".json", "_unknown"))

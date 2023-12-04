@@ -21,7 +21,7 @@ import fi.dy.masa.malilib.gui.GuiConfigsBase
 import fi.dy.masa.malilib.gui.button.ButtonBase
 import fi.dy.masa.malilib.gui.button.ButtonGeneric
 import fi.dy.masa.malilib.gui.button.IButtonActionListener
-import mc.algrim.fabric.chat.AlgrimChatClient.MOD_ID
+import mc.algrim.fabric.chat.AlgrimChat.MOD_ID
 import mc.algrim.fabric.chat.config.Config
 
 class ConfigGui : GuiConfigsBase(10, 50, MOD_ID, null, "AlgrimChat Configs") {
