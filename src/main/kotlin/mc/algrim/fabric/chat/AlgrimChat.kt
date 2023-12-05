@@ -1,5 +1,5 @@
 /*
- * This file is part of algrim-chat, a chat styling fabric mod.
+ * This file is part of Algrim Chat, a chat styling fabric mod.
  * Copyright (C) 2023.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory
 
 object AlgrimChat : ClientModInitializer, IInitializationHandler {
     const val MOD_ID = "algrim-chat"
-    const val MOD_NAME = "AlgrimChat"
+    const val MOD_NAME = "Algrim Chat"
 
     //chat-sed
 
