@@ -15,22 +15,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mc.algrim.fabric.chat.input
+package mc.algrim.fabric.chat
 
 import fi.dy.masa.malilib.gui.GuiBase
-import fi.dy.masa.malilib.hotkeys.IHotkeyCallback
-import fi.dy.masa.malilib.hotkeys.IKeybind
-import fi.dy.masa.malilib.hotkeys.KeyAction
+import fi.dy.masa.malilib.hotkeys.*
+import mc.algrim.fabric.chat.AlgrimChat.MOD_NAME
 import mc.algrim.fabric.chat.config.Config
 import mc.algrim.fabric.chat.gui.ConfigGui
 
-object KeyCallbacks : IHotkeyCallback {
+object HotkeyHandler : IKeybindProvider, IHotkeyCallback {
 
     init {
         Config.globalConfig.configGuiHotKey.keybind.setCallback(this)
     }
 
-    override fun onKeyAction(action: KeyAction, key: IKeybind): Boolean {
+    override fun addKeysToMap(manager: IKeybindManager) {
+        manager.addKeybindToMap(Config.globalConfig.configGuiHotKey.keybind)
+    }
+
+    override fun addHotkeys(manager: IKeybindManager) {
+        manager.addHotkeysForCategory(MOD_NAME, "Chat", listOf(Config.globalConfig.configGuiHotKey))
+    }
+
+    override fun onKeyAction(action: KeyAction?, key: IKeybind?): Boolean {
         return if (key == Config.globalConfig.configGuiHotKey.keybind) {
             GuiBase.openGui(ConfigGui())
             true

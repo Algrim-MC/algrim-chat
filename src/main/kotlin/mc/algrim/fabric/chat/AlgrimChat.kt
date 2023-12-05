@@ -23,8 +23,6 @@ import fi.dy.masa.malilib.event.InputEventHandler
 import fi.dy.masa.malilib.event.WorldLoadHandler
 import fi.dy.masa.malilib.interfaces.IInitializationHandler
 import mc.algrim.fabric.chat.config.Config
-import mc.algrim.fabric.chat.input.InputHandler
-import mc.algrim.fabric.chat.input.KeyCallbacks
 import net.fabricmc.api.ClientModInitializer
 import org.slf4j.LoggerFactory
 
@@ -44,11 +42,9 @@ object AlgrimChat : ClientModInitializer, IInitializationHandler {
 
     override fun registerModHandlers() {
         ConfigManager.getInstance().registerConfigHandler(MOD_ID, Config.globalConfig)
-        InputEventHandler.getKeybindManager().registerKeybindProvider(InputHandler)
+        InputEventHandler.getKeybindManager().registerKeybindProvider(HotkeyHandler)
 
         WorldLoadHandler.getInstance().registerWorldLoadPreHandler(Config)
         WorldLoadHandler.getInstance().registerWorldLoadPostHandler(Config)
-
-        KeyCallbacks
     }
 }
