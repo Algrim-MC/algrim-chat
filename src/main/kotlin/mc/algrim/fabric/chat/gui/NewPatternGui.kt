@@ -120,9 +120,9 @@ class NewPatternGui(
     private fun updateConfig(list: MutableList<String>?) {
         list ?: return
         if (replace) {
-            list.add(patternIndex, patternStr)
-        } else {
             list[patternIndex] = patternStr
+        } else {
+            list.add(patternIndex, patternStr)
         }
     }
 

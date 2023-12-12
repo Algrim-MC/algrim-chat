@@ -30,9 +30,13 @@ class ConfigGui : GuiConfigsBase(10, 50, MOD_ID, null, "AlgrimChat Configs") {
     }
 
     fun onTabChanged(tabId: ConfigTabWidget.TabId) {
-        this.reCreateListWidget()
-        this.getListWidget()?.resetScrollbarPosition()
-        this.initGui()
+        if (tabId == ConfigTabWidget.TabId.PATTERNS) {
+            GuiBase.openGui(PatternListGui())
+        } else {
+            this.reCreateListWidget()
+            this.getListWidget()?.resetScrollbarPosition()
+            this.initGui()
+        }
     }
 
     override fun onSettingsChanged() {
@@ -44,11 +48,8 @@ class ConfigGui : GuiConfigsBase(10, 50, MOD_ID, null, "AlgrimChat Configs") {
         return when (ConfigTabWidget.currentTab) {
             ConfigTabWidget.TabId.GLOBAL -> ConfigOptionWrapper.createFor(Config.globalConfig.chatOptions)
             ConfigTabWidget.TabId.SERVER -> ConfigOptionWrapper.createFor(Config.serverConfig!!.chatOptions)
-            ConfigTabWidget.TabId.PATTERNS -> {
-                val patternGui = PatternListGui()
-                patternGui.parent = this
-                GuiBase.openGui(patternGui)
-                return mutableListOf()
+            else -> {
+                GuiBase.openGui(PatternListGui()); return mutableListOf()
             }
         }
     }

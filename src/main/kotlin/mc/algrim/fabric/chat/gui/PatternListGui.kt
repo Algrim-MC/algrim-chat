@@ -14,10 +14,6 @@ class PatternListGui : GuiListBase<PatternListGui.PatternWrapper, PatternListIte
     val globalPatterns = mutableListOf<PatternWrapper>()
     val serverPatterns = mutableListOf<PatternWrapper>()
 
-    override fun shouldCloseOnEsc(): Boolean {
-        return true
-    }
-
     init {
         this.setTitle("Patterns")
     }
@@ -65,21 +61,12 @@ class PatternListGui : GuiListBase<PatternListGui.PatternWrapper, PatternListIte
 
     private fun onTabChanged(tabId: ConfigTabWidget.TabId) {
         if (tabId != ConfigTabWidget.TabId.PATTERNS) {
-            this.closeGui(true)
+            GuiBase.openGui(ConfigGui())
         } else {
             this.reCreateListWidget()
             this.getListWidget()?.resetScrollbarPosition()
             this.initGui()
         }
-    }
-
-    override fun onKeyTyped(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-//        if (keyCode == KeyCodes.KEY_ESCAPE) {
-//            this.closeGui(false)
-//            return true
-//        }
-
-        return super.onKeyTyped(keyCode, scanCode, modifiers)
     }
 
     private fun onButtonClicked(
@@ -183,39 +170,6 @@ class PatternListGui : GuiListBase<PatternListGui.PatternWrapper, PatternListIte
         Config.reloadPatterns(Config.serverConfig!!)
     }
 
-    private fun executeButtonFor(
-        patterns: MutableList<PatternWrapper>, index: Int, buttonId: PatternListItemWidget.ButtonId
-    ): Boolean {
-        when (buttonId) {
-            PatternListItemWidget.ButtonId.EDIT -> {
-            }
-
-            PatternListItemWidget.ButtonId.ADD -> {
-            }
-
-            PatternListItemWidget.ButtonId.MOVE_UP -> {
-                if (index > 0) {
-                    Collections.swap(patterns, index, index - 1)
-                    return true
-                }
-            }
-
-            PatternListItemWidget.ButtonId.MOVE_DOWN -> {
-                if (index < patterns.size - 1) {
-                    Collections.swap(patterns, index, index + 1)
-                    return true
-                }
-            }
-
-            PatternListItemWidget.ButtonId.REMOVE -> {
-                patterns.removeAt(index)
-                return true
-            }
-        }
-
-        return false
-    }
-
     override fun createListWidget(listX: Int, listY: Int): PatternListWidget {
         return PatternListWidget(listX, listY, browserWidth, browserHeight, this, ::onButtonClicked)
     }
@@ -231,11 +185,14 @@ class PatternListGui : GuiListBase<PatternListGui.PatternWrapper, PatternListIte
     class PatternWrapper(val value: String, val scope: Scope, val type: Type) {
 
         enum class Scope {
-            NONE, GLOBAL, SERVER
+            NONE,
+            GLOBAL,
+            SERVER
         }
 
         enum class Type {
-            PATTERN, SEPARATOR,
+            PATTERN,
+            SEPARATOR
         }
     }
 }
