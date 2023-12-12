@@ -23,6 +23,7 @@ import fi.dy.masa.malilib.config.ConfigUtils
 import fi.dy.masa.malilib.config.IConfigBase
 import fi.dy.masa.malilib.config.IConfigHandler
 import fi.dy.masa.malilib.util.JsonUtils
+import mc.algrim.fabric.chat.AlgrimChat
 import java.io.File
 
 abstract class ConfigFile(val configFile: File) : IConfigHandler {
@@ -42,6 +43,7 @@ abstract class ConfigFile(val configFile: File) : IConfigHandler {
     }
 
     override fun save() {
+        AlgrimChat.logger.info("Saving config to $configFile")
         if (configFile.parentFile.exists() && configFile.parentFile.isDirectory() || configFile.parentFile.mkdirs()) {
             val root = JsonObject()
 

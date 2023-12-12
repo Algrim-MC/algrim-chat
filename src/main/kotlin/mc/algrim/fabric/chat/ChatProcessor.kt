@@ -90,7 +90,7 @@ object ChatProcessor {
         return true
     }
 
-    private fun aggregateCSPs(messageCSPs: MutableList<Pair<Char, Style>>): Text {
+    fun aggregateCSPs(messageCSPs: MutableList<Pair<Char, Style>>): Text {
         var groupId = 0
         var previousStyle = Style.EMPTY
 

@@ -29,7 +29,9 @@ class GlobalConfigFile(configFile: File) : ConfigFile(configFile) {
     val patterns = ConfigStringList("patterns", ImmutableList.of(), "Style patterns to be used globally")
     val configGuiHotKey = ConfigHotkey("openConfigGui", "R,C", "The hotkey used to open the config gui")
 
-    val chatOptions = listOf<IConfigBase>(enabled, configGuiHotKey, patterns)
+    val debugGuiHotKey = ConfigHotkey("openDebugGui", "", "The hotkey used to open the debug gui")
+
+    val chatOptions = listOf<IConfigBase>(enabled, configGuiHotKey, debugGuiHotKey, patterns)
 
     override val categories = mapOf("Chat" to chatOptions)
 }

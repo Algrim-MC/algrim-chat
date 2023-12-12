@@ -22,25 +22,42 @@ import fi.dy.masa.malilib.hotkeys.*
 import mc.algrim.fabric.chat.AlgrimChat.MOD_NAME
 import mc.algrim.fabric.chat.config.Config
 import mc.algrim.fabric.chat.gui.ConfigGui
+import mc.algrim.fabric.chat.gui.NewPatternGui
+import mc.algrim.fabric.chat.gui.PatternListGui
 
 object HotkeyHandler : IKeybindProvider, IHotkeyCallback {
 
     init {
         Config.globalConfig.configGuiHotKey.keybind.setCallback(this)
+        Config.globalConfig.debugGuiHotKey.keybind.setCallback(this)
     }
 
     override fun addKeysToMap(manager: IKeybindManager) {
         manager.addKeybindToMap(Config.globalConfig.configGuiHotKey.keybind)
+        manager.addKeybindToMap(Config.globalConfig.debugGuiHotKey.keybind)
     }
 
     override fun addHotkeys(manager: IKeybindManager) {
-        manager.addHotkeysForCategory(MOD_NAME, "Chat", listOf(Config.globalConfig.configGuiHotKey))
+        manager.addHotkeysForCategory(
+            MOD_NAME,
+            "Chat",
+            listOf(Config.globalConfig.configGuiHotKey, Config.globalConfig.debugGuiHotKey)
+        )
     }
 
     override fun onKeyAction(action: KeyAction?, key: IKeybind?): Boolean {
-        return if (key == Config.globalConfig.configGuiHotKey.keybind) {
-            GuiBase.openGui(ConfigGui())
-            true
-        } else false
+        return when (key) {
+            Config.globalConfig.configGuiHotKey.keybind -> {
+                GuiBase.openGui(ConfigGui())
+                true
+            }
+
+            Config.globalConfig.debugGuiHotKey.keybind -> {
+                GuiBase.openGui(NewPatternGui("", PatternListGui.PatternWrapper.Scope.GLOBAL, 0))
+                true
+            }
+
+            else -> false
+        }
     }
 }
