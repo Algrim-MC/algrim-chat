@@ -103,8 +103,8 @@ class NewPatternGui(
             } else {
                 Pattern.fromString(patternStr)
                 when (scope) {
-                    PatternListGui.PatternWrapper.Scope.GLOBAL -> updateConfig(Config.globalConfig.patterns.strings)
-                    PatternListGui.PatternWrapper.Scope.SERVER -> updateConfig(Config.serverConfig?.patterns?.strings)
+                    PatternListGui.PatternWrapper.Scope.GLOBAL -> updateConfigPatterns(Config.globalConfig.patterns.strings)
+                    PatternListGui.PatternWrapper.Scope.SERVER -> updateConfigPatterns(Config.serverConfig?.patterns?.strings)
                     else -> {}
                 }
             }
@@ -117,13 +117,16 @@ class NewPatternGui(
         this.closeGui(true)
     }
 
-    private fun updateConfig(list: MutableList<String>?) {
-        list ?: return
+    private fun updateConfigPatterns(list: MutableList<String>?) {
+        if (list == null) return
+
         if (replace) {
             list[patternIndex] = patternStr
         } else {
             list.add(patternIndex, patternStr)
         }
+
+        Config.reloadPatterns(Config.serverConfig!!)
     }
 
     private fun cancel() {
