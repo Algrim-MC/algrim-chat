@@ -44,14 +44,18 @@ class PatternListItemWidget(
             label.x += (this.width - label.width) / 2
         }
 
-        if (patternWrapper.type == PatternListGui.PatternWrapper.Type.PATTERN) {
-            var buttonX = this.width - 10
-            for (buttonId in ButtonId.entries.reversed()) {
-                val newButton =
-                    createButton(buttonX, y, buttonId.displayName) { _: ButtonBase, _: Int -> executeButton(buttonId) }
-                newButton.x -= newButton.width + 2
-                buttonX -= newButton.width + 2
-            }
+        val buttons: List<ButtonId> = when (patternWrapper.type) {
+            PatternListGui.PatternWrapper.Type.PATTERN -> ButtonId.entries.reversed()
+            PatternListGui.PatternWrapper.Type.EMPTY_SCOPE -> listOf(ButtonId.ADD)
+            else -> listOf()
+        }
+
+        var buttonX = this.width - 10
+        for (buttonId in buttons) {
+            val newButton =
+                createButton(buttonX, y, buttonId.displayName) { _: ButtonBase, _: Int -> executeButton(buttonId) }
+            newButton.x -= newButton.width + 2
+            buttonX -= newButton.width + 2
         }
     }
 

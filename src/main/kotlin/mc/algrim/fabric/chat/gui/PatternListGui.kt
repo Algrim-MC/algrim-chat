@@ -44,13 +44,19 @@ class PatternListGui : GuiListBase<PatternListGui.PatternWrapper, PatternListIte
     private fun initLists() {
         resetLists()
         val serverPatternStrings = Config.serverConfig?.patterns?.strings
-        if (serverPatternStrings != null && serverPatternStrings.size > 0) {
-            serverPatterns.addAll(serverPatternStrings.map {
-                PatternWrapper(
-                    it, PatternWrapper.Scope.SERVER, PatternWrapper.Type.PATTERN
-                )
-            })
-            patterns.addAll(serverPatterns)
+        val globalPatternStrings = Config.globalConfig.patterns.strings
+
+        if (serverPatternStrings != null) {
+            if (serverPatternStrings.size > 0) {
+                serverPatterns.addAll(serverPatternStrings.map {
+                    PatternWrapper(
+                        it, PatternWrapper.Scope.SERVER, PatternWrapper.Type.PATTERN
+                    )
+                })
+                patterns.addAll(serverPatterns)
+            } else {
+                patterns.add(PatternWrapper("", PatternWrapper.Scope.SERVER, PatternWrapper.Type.EMPTY_SCOPE))
+            }
         }
 
         patterns.add(
@@ -59,7 +65,6 @@ class PatternListGui : GuiListBase<PatternListGui.PatternWrapper, PatternListIte
             )
         )
 
-        val globalPatternStrings = Config.globalConfig.patterns.strings
         if (globalPatternStrings.size > 0) {
             globalPatterns.addAll(Config.globalConfig.patterns.strings.map {
                 PatternWrapper(
@@ -67,6 +72,8 @@ class PatternListGui : GuiListBase<PatternListGui.PatternWrapper, PatternListIte
                 )
             })
             patterns.addAll(globalPatterns)
+        } else {
+            patterns.add(PatternWrapper("", PatternWrapper.Scope.GLOBAL, PatternWrapper.Type.EMPTY_SCOPE))
         }
     }
 
@@ -92,7 +99,8 @@ class PatternListGui : GuiListBase<PatternListGui.PatternWrapper, PatternListIte
         val entries = this.listWidget!!.currentEntries
         val patternIndexOffset =
             entries.indexOfFirst { it.scope == patternWrapper.scope && it.type == PatternWrapper.Type.PATTERN }
-        val index = listItem.listIndex - patternIndexOffset
+        val index =
+            if (patternWrapper.type == PatternWrapper.Type.EMPTY_SCOPE) 0 else listItem.listIndex - patternIndexOffset
 
         AlgrimChat.logger.info("Got event ${patternWrapper.value} $buttonId")
 
@@ -209,7 +217,8 @@ class PatternListGui : GuiListBase<PatternListGui.PatternWrapper, PatternListIte
 
         enum class Type {
             PATTERN,
-            SEPARATOR
+            SEPARATOR,
+            EMPTY_SCOPE
         }
     }
 }
