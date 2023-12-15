@@ -51,7 +51,10 @@ object StyleUtils {
                 "underline", "u" -> style.withUnderline(opt)
                 "strikethrough", "s" -> style.withStrikethrough(opt)
                 "obfuscate", "o" -> style.withObfuscated(opt)
-                else -> style.withColor(TextColor.parse(arg))
+                else -> TextColor.parse(arg)
+                    .map { style.withColor(it) }
+                    .result()
+                    .orElse(MinecraftStyle.EMPTY)
             }
         }
 

@@ -43,16 +43,20 @@ class ChatProcessorTest {
         val styledTestMsg2 = ChatProcessor.execute(testMsg2)
 
         val expectedTestMsgStyles = listOf(
-            "[MOD] " to Style.EMPTY.withColor(TextColor.parse("#821212")),
-            "Barry" to StyleUtils.strippedStyle.withColor(TextColor.parse("#00FFFF")),
+            "[MOD] " to Style.EMPTY.withColor(colourOrThrow("#821212")),
+            "Barry" to StyleUtils.strippedStyle.withColor(colourOrThrow("#00FFFF"))
+                .withParent(StyleUtils.strippedStyle),
             ": " to Style.EMPTY,
-            "Stuff a mod named Barry would say." to StyleUtils.strippedStyle.withColor(TextColor.parse("white"))
+            "Stuff a mod named Barry would say." to StyleUtils.strippedStyle.withColor(colourOrThrow("white"))
+                .withParent(StyleUtils.strippedStyle)
         )
 
         val expectedTestMsg2Styles = listOf(
-            "Carl" to Style.EMPTY.withColor(TextColor.parse("#00FFFF")),
+            "Carl" to Style.EMPTY.withColor(colourOrThrow("#00FFFF"))
+                .withParent(StyleUtils.strippedStyle),
             ": " to Style.EMPTY,
-            "Stuff a player named Carl would say." to Style.EMPTY.withColor(TextColor.parse("white"))
+            "Stuff a player named Carl would say." to Style.EMPTY.withColor(colourOrThrow("white"))
+                .withParent(StyleUtils.strippedStyle)
         )
 
         val actualTestMsgStyles = mutableListOf<Pair<String, Style>>()
@@ -72,4 +76,6 @@ class ChatProcessorTest {
         assertContentEquals(expectedTestMsgStyles, actualTestMsgStyles)
         assertContentEquals(expectedTestMsg2Styles, actualTestMsg2Styles)
     }
+
+    private fun colourOrThrow(name: String) = TextColor.parse(name).get().orThrow()
 }
