@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("fabric-loom") version "1.3-SNAPSHOT"
     id("maven-publish")
-    id("org.jetbrains.kotlin.jvm") version "1.9.10"
+    id("org.jetbrains.kotlin.jvm") version "1.9.21"
 }
 
 version = project.properties["mod_version"]!!
