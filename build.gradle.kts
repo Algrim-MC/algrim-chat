@@ -22,10 +22,8 @@ dependencies {
     mappings("net.fabricmc:yarn:${project.properties["yarn_mappings"]}:v2")
     modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
 
-    modImplementation("fi.dy.masa.malilib:malilib-fabric-${project.properties["minecraft_version"]}:${project.properties["malilib_version"]}")
-
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.properties["fabric_version"]}")
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.properties["fabric_kotlin_version"]}")
+    modImplementation("fi.dy.masa.malilib:malilib-fabric-${project.properties["minecraft_version"]}:${project.properties["malilib_version"]}")
 
     testImplementation(kotlin("test"))
 }
