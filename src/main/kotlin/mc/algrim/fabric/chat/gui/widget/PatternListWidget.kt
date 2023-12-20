@@ -30,7 +30,7 @@ class PatternListWidget(
 ) : WidgetListBase<PatternListGui.PatternWrapper, PatternListItemWidget>(x, y, width, height, {}) {
     override fun createListEntryWidget(
         x: Int, y: Int, listIndex: Int, isOdd: Boolean, entry: PatternListGui.PatternWrapper
-    ): PatternListItemWidget { // TODO: This results in the width never changing after initialization
+    ): PatternListItemWidget {
         return PatternListItemWidget(x, y, this.browserEntryWidth, entry, listIndex, eventHandler)
     }
 
