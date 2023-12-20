@@ -55,7 +55,7 @@ class StylePatternPart(override val pattern: String, override val index: Int) : 
 
 
         for ((i, char) in remainder.toCharArray()
-            .withIndex()) { // TODO: Add an open char counting method to handle nested style parts.
+            .withIndex()) {
             val escaped = if (i > 0) remainder[i - 1] == '\\' else false
 
             if (i < 1 || (!escaped && char == '\\')) continue
