@@ -23,7 +23,9 @@ import fi.dy.masa.malilib.gui.button.IButtonActionListener
 import fi.dy.masa.malilib.gui.widgets.WidgetLabel
 import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase
 import fi.dy.masa.malilib.render.RenderUtils
-import mc.algrim.fabric.chat.gui.PatternListGui
+import mc.algrim.fabric.chat.gui.data.ListItemData
+import mc.algrim.fabric.chat.gui.data.PatternListItemData
+import mc.algrim.fabric.chat.gui.data.SeparatorItemData
 import net.minecraft.client.gui.DrawContext
 import kotlin.math.max
 import kotlin.math.min
@@ -32,21 +34,51 @@ class PatternListItemWidget(
     x: Int,
     y: Int,
     width: Int,
-    private val patternWrapper: PatternListGui.PatternWrapper,
+    private val listItemData: ListItemData,
     listIndex: Int,
-    private val eventHandler: ((listItem: PatternListItemWidget, patternWrapper: PatternListGui.PatternWrapper, buttonId: ButtonId) -> Unit)? = null
-) : WidgetListEntryBase<PatternListGui.PatternWrapper>(x, y, width, 24, patternWrapper, listIndex) {
+    private val eventHandler: ((listItem: PatternListItemWidget, listItemData: ListItemData, buttonId: ButtonId) -> Unit)? = null
+) : WidgetListEntryBase<ListItemData>(x, y, width, 24, listItemData, listIndex) {
 
     init {
-        val label = createLabel(x + 10, y - 4 + this.height / 2, 0xFFFFFF, patternWrapper.value)
+        var labelX = x + 10
+        when (listItemData) {
+            is PatternListItemData -> {
+                val labelWidth = ((this.width - 20) * 0.20).toInt()
+                val nameLabel = createLabel(
+                    labelX,
+                    y - 4 + this.height / 2,
+                    labelWidth,
+                    0xFFFFFF,
+                    listItemData.value.name
+                )
+                labelX += nameLabel.width + 10
+                createLabel(
+                    labelX,
+                    y - 4 + this.height / 2,
+                    this.width - labelWidth - 200,
+                    0xFFFFFF,
+                    listItemData.value.patternValue
+                )
+            }
 
-        if (patternWrapper.type == PatternListGui.PatternWrapper.Type.SEPARATOR) {
-            label.x += (this.width - label.width) / 2
+            is SeparatorItemData -> {
+                val valueLabelSize = min(this.getStringWidth(listItemData.value) + 10, this.width - 20)
+                val valueLabel =
+                    createLabel(labelX, y - 4 + this.height / 2, valueLabelSize, 0xFFFFFF, listItemData.value)
+                valueLabel.x += (this.width - valueLabel.width) / 2
+            }
         }
 
-        val buttons: List<ButtonId> = when (patternWrapper.type) {
-            PatternListGui.PatternWrapper.Type.PATTERN -> ButtonId.entries.reversed()
-            PatternListGui.PatternWrapper.Type.EMPTY_SCOPE -> listOf(ButtonId.ADD)
+        val buttons: List<ButtonId> = when (listItemData.type) {
+            ListItemData.Type.PATTERN -> {
+                if (listItemData !is PatternListItemData) listOf()
+                else ButtonId.entries.filter {
+                    !(it == ButtonId.ENABLE && listItemData.value.enabled
+                        || it == ButtonId.DISABLE && !listItemData.value.enabled)
+                }.reversed()
+            }
+
+            ListItemData.Type.EMPTY_SCOPE -> listOf(ButtonId.ADD)
             else -> listOf()
         }
 
@@ -59,9 +91,13 @@ class PatternListItemWidget(
         }
     }
 
-    private fun createLabel(x: Int, y: Int, colour: Int, text: String): WidgetLabel {
-        val width = min(this.getStringWidth(text) + 10, this.width - 20)
-        val label = WidgetLabel(x, y, width, 10, colour, text)
+    private fun createLabel(x: Int, y: Int, width: Int, colour: Int, text: String): WidgetLabel {
+        val textWidth = this.getStringWidth(text)
+        val labelValue = if (textWidth > width) {
+            this.textRenderer.trimToWidth(text, width - 10) + "…"
+        } else text
+
+        val label = WidgetLabel(x, y, width, 10, colour, labelValue)
 
         addWidget(label)
 
@@ -78,7 +114,7 @@ class PatternListItemWidget(
     }
 
     private fun executeButton(buttonId: ButtonId) {
-        eventHandler?.invoke(this, patternWrapper, buttonId)
+        eventHandler?.invoke(this, listItemData, buttonId)
     }
 
     override fun render(mouseX: Int, mouseY: Int, selected: Boolean, drawContext: DrawContext?) {
@@ -89,6 +125,8 @@ class PatternListItemWidget(
     }
 
     enum class ButtonId(val displayName: String) {
+        ENABLE("☐"),
+        DISABLE("☑"),
         EDIT("Edit"),
         ADD("+"),
         MOVE_UP("▲"),

@@ -46,8 +46,8 @@ class ConfigGui : GuiConfigsBase(10, 50, MOD_ID, null, "AlgrimChat Configs") {
 
     override fun getConfigs(): MutableList<ConfigOptionWrapper> {
         return when (ConfigTabWidget.currentTab) {
-            ConfigTabWidget.TabId.GLOBAL -> ConfigOptionWrapper.createFor(Config.globalConfig.chatOptions)
-            ConfigTabWidget.TabId.SERVER -> ConfigOptionWrapper.createFor(Config.serverConfig!!.chatOptions)
+            ConfigTabWidget.TabId.GLOBAL -> ConfigOptionWrapper.createFor(Config.globalConfig.guiOptions)
+            ConfigTabWidget.TabId.SERVER -> ConfigOptionWrapper.createFor(Config.serverConfig!!.guiOptions)
             else -> {
                 GuiBase.openGui(PatternListGui()); return mutableListOf()
             }

@@ -37,10 +37,12 @@ object Config : IWorldLoadListener {
     fun reloadPatterns(serverConfig: ServerConfigFile) {
         val effectivePatternStrings = ArrayList<String>()
 
-        effectivePatternStrings.addAll(serverConfig.patterns.strings)
+        effectivePatternStrings.addAll(serverConfig.patterns.patternOptionValues.filter { it.enabled }
+            .map { it.patternValue })
 
         if (serverConfig.useGlobal.booleanValue) {
-            effectivePatternStrings.addAll(globalConfig.patterns.strings)
+            effectivePatternStrings.addAll(globalConfig.patterns.patternOptionValues.filter { it.enabled }
+                .map { it.patternValue })
         }
 
         val patterns = effectivePatternStrings.mapNotNull {

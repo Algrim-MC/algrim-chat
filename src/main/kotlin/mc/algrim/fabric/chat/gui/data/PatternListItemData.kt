@@ -15,24 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mc.algrim.fabric.chat.config
+package mc.algrim.fabric.chat.gui.data
 
-import fi.dy.masa.malilib.config.IConfigBase
-import fi.dy.masa.malilib.config.options.ConfigBoolean
 import mc.algrim.fabric.chat.config.option.PatternOption
-import java.io.File
 
-class ServerConfigFile(configFile: File) : ConfigFile(configFile) {
-    val patterns = PatternOption("patterns", "Style patterns for chat on this server.")
-    val useGlobal = ConfigBoolean("useGlobal", true, "Whether global patterns should be used on this server.")
-
-    val guiOptions = listOf<IConfigBase>(useGlobal)
-    val chatOptions = listOf<IConfigBase>(useGlobal, patterns)
-
-    override val categories: Map<String, List<IConfigBase>> = mapOf("Chat" to chatOptions)
-
-    init {
-        // Loading manually when joining server.
-        this.load()
-    }
+class PatternListItemData(
+    val value: PatternOption.PatternOptionValue,
+    override val scope: ListItemData.Scope
+) : ListItemData {
+    override val type = ListItemData.Type.PATTERN
 }
