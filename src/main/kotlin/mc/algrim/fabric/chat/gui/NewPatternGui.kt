@@ -27,14 +27,17 @@ import fi.dy.masa.malilib.util.InfoUtils
 import mc.algrim.fabric.chat.ChatProcessor
 import mc.algrim.fabric.chat.components.Pattern
 import mc.algrim.fabric.chat.config.Config
+import mc.algrim.fabric.chat.config.option.PatternOption
+import mc.algrim.fabric.chat.gui.data.ListItemData
 import mc.algrim.fabric.chat.gui.widget.GuiTextField
 import net.minecraft.client.gui.widget.TextWidget
 import net.minecraft.screen.ScreenTexts
 import net.minecraft.text.Text
 
 class NewPatternGui(
+    private var name: String = "",
     private var patternStr: String = "",
-    private val scope: PatternListGui.PatternWrapper.Scope,
+    private val scope: ListItemData.Scope,
     private val patternIndex: Int,
     private val replace: Boolean = false
 ) : AlgrimGuiBase() {
@@ -54,6 +57,13 @@ class NewPatternGui(
         super.initGui()
 
         var y = stdWidgetHeight
+
+        val nameLabel = createTextLabel(stdMargin, y, "Name")
+        y += nameLabel.height + 2
+        val nameTextField = createTextField(stdMargin, y, this.width - stdMargin * 2, name) { f ->
+            name = f.text; return@createTextField true
+        }
+        y += nameTextField.height + stdMargin
 
         val patternLabel = createTextLabel(stdMargin, y, "Pattern")
         y += patternLabel.height + 2
@@ -103,8 +113,8 @@ class NewPatternGui(
             } else {
                 Pattern.fromString(patternStr)
                 when (scope) {
-                    PatternListGui.PatternWrapper.Scope.GLOBAL -> updateConfigPatterns(Config.globalConfig.patterns.strings)
-                    PatternListGui.PatternWrapper.Scope.SERVER -> updateConfigPatterns(Config.serverConfig?.patterns?.strings)
+                    ListItemData.Scope.GLOBAL -> updateConfigPatterns(Config.globalConfig.patterns)
+                    ListItemData.Scope.SERVER -> updateConfigPatterns(Config.serverConfig?.patterns)
                     else -> {}
                 }
             }
@@ -117,14 +127,19 @@ class NewPatternGui(
         this.closeGui(true)
     }
 
-    private fun updateConfigPatterns(list: MutableList<String>?) {
-        if (list == null) return
+    private fun updateConfigPatterns(options: PatternOption?) {
+        val list = options?.patternOptionValues ?: return
+
+        val patternValues = list.toMutableList()
+        val patternValue = PatternOption.PatternOptionValue(name, patternStr, true)
 
         if (replace) {
-            list[patternIndex] = patternStr
+            patternValues[patternIndex] = patternValue
         } else {
-            list.add(patternIndex, patternStr)
+            patternValues.add(patternIndex, patternValue)
         }
+
+        options.patternOptionValues = patternValues
 
         Config.reloadPatterns(Config.serverConfig!!)
     }

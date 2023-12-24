@@ -19,6 +19,7 @@ package mc.algrim.fabric.chat.gui.widget
 
 import fi.dy.masa.malilib.gui.widgets.WidgetListBase
 import mc.algrim.fabric.chat.gui.PatternListGui
+import mc.algrim.fabric.chat.gui.data.ListItemData
 
 class PatternListWidget(
     x: Int,
@@ -26,15 +27,15 @@ class PatternListWidget(
     width: Int,
     height: Int,
     val parentGui: PatternListGui,
-    val eventHandler: ((listItem: PatternListItemWidget, patternWrapper: PatternListGui.PatternWrapper, buttonId: PatternListItemWidget.ButtonId) -> Unit)? = null
-) : WidgetListBase<PatternListGui.PatternWrapper, PatternListItemWidget>(x, y, width, height, {}) {
+    val eventHandler: ((listItem: PatternListItemWidget, listItemData: ListItemData, buttonId: PatternListItemWidget.ButtonId) -> Unit)? = null
+) : WidgetListBase<ListItemData, PatternListItemWidget>(x, y, width, height, {}) {
     override fun createListEntryWidget(
-        x: Int, y: Int, listIndex: Int, isOdd: Boolean, entry: PatternListGui.PatternWrapper
+        x: Int, y: Int, listIndex: Int, isOdd: Boolean, entry: ListItemData
     ): PatternListItemWidget {
         return PatternListItemWidget(x, y, this.browserEntryWidth, entry, listIndex, eventHandler)
     }
 
-    override fun getAllEntries(): Collection<PatternListGui.PatternWrapper> {
+    override fun getAllEntries(): Collection<ListItemData> {
         return parentGui.patterns
     }
 }
