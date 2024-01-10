@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -32,7 +32,15 @@ class PatternListWidget(
     override fun createListEntryWidget(
         x: Int, y: Int, listIndex: Int, isOdd: Boolean, entry: ListItemData
     ): PatternListItemWidget {
-        return PatternListItemWidget(x, y, this.browserEntryWidth, entry, listIndex, eventHandler)
+        return PatternListItemWidget(
+            x,
+            y,
+            this.browserEntryWidth,
+            entry,
+            listIndex,
+            parentGui.nameColumnWidth,
+            eventHandler
+        )
     }
 
     override fun getAllEntries(): Collection<ListItemData> {

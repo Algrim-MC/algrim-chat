@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -28,7 +28,6 @@ import mc.algrim.fabric.chat.gui.data.PatternListItemData
 import mc.algrim.fabric.chat.gui.data.SeparatorItemData
 import net.minecraft.client.gui.DrawContext
 import kotlin.math.max
-import kotlin.math.min
 
 class PatternListItemWidget(
     x: Int,
@@ -36,6 +35,7 @@ class PatternListItemWidget(
     width: Int,
     private val listItemData: ListItemData,
     listIndex: Int,
+    nameColumnWidth: Int,
     private val eventHandler: ((listItem: PatternListItemWidget, listItemData: ListItemData, buttonId: ButtonId) -> Unit)? = null
 ) : WidgetListEntryBase<ListItemData>(x, y, width, 24, listItemData, listIndex) {
 
@@ -43,29 +43,28 @@ class PatternListItemWidget(
         var labelX = x + 10
         when (listItemData) {
             is PatternListItemData -> {
-                val labelWidth = ((this.width - 20) * 0.20).toInt()
                 val nameLabel = createLabel(
                     labelX,
                     y - 4 + this.height / 2,
-                    labelWidth,
+                    nameColumnWidth,
                     0xFFFFFF,
                     listItemData.value.name
                 )
                 labelX += nameLabel.width + 10
+
                 createLabel(
                     labelX,
                     y - 4 + this.height / 2,
-                    this.width - labelWidth - 200,
+                    this.width - nameColumnWidth - 200,
                     0xFFFFFF,
                     listItemData.value.patternValue
                 )
             }
 
             is SeparatorItemData -> {
-                val valueLabelSize = min(this.getStringWidth(listItemData.value) + 10, this.width - 20)
                 val valueLabel =
-                    createLabel(labelX, y - 4 + this.height / 2, valueLabelSize, 0xFFFFFF, listItemData.value)
-                valueLabel.x += (this.width - valueLabel.width) / 2
+                    createLabel(labelX, y - 4 + this.height / 2, this.width, 0xFFFFFF, listItemData.value)
+                valueLabel.setCentered(true)
             }
         }
 

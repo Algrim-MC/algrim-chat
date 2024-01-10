@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -25,14 +25,18 @@ import mc.algrim.fabric.chat.gui.data.ListItemData
 import mc.algrim.fabric.chat.gui.data.PatternListItemData
 import mc.algrim.fabric.chat.gui.data.SeparatorItemData
 import mc.algrim.fabric.chat.gui.widget.ConfigTabWidget
+import mc.algrim.fabric.chat.gui.widget.PatternListHeaderWidget
 import mc.algrim.fabric.chat.gui.widget.PatternListItemWidget
 import mc.algrim.fabric.chat.gui.widget.PatternListWidget
 import java.util.*
 
-class PatternListGui : GuiListBase<ListItemData, PatternListItemWidget, PatternListWidget>(10, 40) {
+class PatternListGui : GuiListBase<ListItemData, PatternListItemWidget, PatternListWidget>(10, 64) {
     val patterns = mutableListOf<ListItemData>()
     val globalPatterns = mutableListOf<PatternListItemData>()
     val serverPatterns = mutableListOf<PatternListItemData>()
+
+    val nameColumnWidth: Int
+        get() = (((this.browserWidth - 20) * 0.15).toInt())
 
     init {
         this.setTitle("Patterns")
@@ -42,6 +46,7 @@ class PatternListGui : GuiListBase<ListItemData, PatternListItemWidget, PatternL
         initLists()
         super.initGui()
         addWidget(ConfigTabWidget(10, 22, ::onTabChanged))
+        addWidget(PatternListHeaderWidget(10, 46, this.browserWidth, 20, this.nameColumnWidth))
     }
 
     private fun initLists() {
