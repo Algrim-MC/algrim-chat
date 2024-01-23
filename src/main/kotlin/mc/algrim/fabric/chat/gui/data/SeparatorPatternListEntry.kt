@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -17,11 +17,7 @@
 
 package mc.algrim.fabric.chat.gui.data
 
-import mc.algrim.fabric.chat.config.option.PatternOption
-
-class PatternListItemData(
-    val value: PatternOption.PatternOptionValue,
-    override val scope: ListItemData.Scope
-) : ListItemData {
-    override val type = ListItemData.Type.PATTERN
+class SeparatorPatternListEntry(val value: String) : PatternListEntry {
+    override val scope: PatternListEntry.Scope = PatternListEntry.Scope.NONE
+    override val type = PatternListEntry.Type.SEPARATOR
 }

@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,7 @@
 
 package mc.algrim.fabric.chat.gui.data
 
-interface ListItemData {
+interface PatternListEntry {
     val scope: Scope
     val type: Type
 

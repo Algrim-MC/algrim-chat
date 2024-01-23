@@ -23,32 +23,32 @@ import fi.dy.masa.malilib.gui.button.IButtonActionListener
 import fi.dy.masa.malilib.gui.widgets.WidgetLabel
 import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase
 import fi.dy.masa.malilib.render.RenderUtils
-import mc.algrim.fabric.chat.gui.data.ListItemData
-import mc.algrim.fabric.chat.gui.data.PatternListItemData
-import mc.algrim.fabric.chat.gui.data.SeparatorItemData
+import mc.algrim.fabric.chat.gui.data.PatternListEntry
+import mc.algrim.fabric.chat.gui.data.PatternPatternListEntry
+import mc.algrim.fabric.chat.gui.data.SeparatorPatternListEntry
 import net.minecraft.client.gui.DrawContext
 import kotlin.math.max
 
-class PatternListItemWidget(
+class PatternListEntryWidget(
     x: Int,
     y: Int,
     width: Int,
-    private val listItemData: ListItemData,
+    private val patternListEntry: PatternListEntry,
     listIndex: Int,
     nameColumnWidth: Int,
-    private val eventHandler: ((listItem: PatternListItemWidget, listItemData: ListItemData, buttonId: ButtonId) -> Unit)? = null
-) : WidgetListEntryBase<ListItemData>(x, y, width, 24, listItemData, listIndex) {
+    private val eventHandler: ((listItem: PatternListEntryWidget, patternListEntry: PatternListEntry, buttonId: ButtonId) -> Unit)? = null
+) : WidgetListEntryBase<PatternListEntry>(x, y, width, 24, patternListEntry, listIndex) {
 
     init {
         var labelX = x + 10
-        when (listItemData) {
-            is PatternListItemData -> {
+        when (patternListEntry) {
+            is PatternPatternListEntry -> {
                 val nameLabel = createLabel(
                     labelX,
                     y - 4 + this.height / 2,
                     nameColumnWidth,
                     0xFFFFFF,
-                    listItemData.value.name
+                    patternListEntry.value.name
                 )
                 labelX += nameLabel.width + 10
 
@@ -57,27 +57,27 @@ class PatternListItemWidget(
                     y - 4 + this.height / 2,
                     this.width - nameColumnWidth - 200,
                     0xFFFFFF,
-                    listItemData.value.patternValue
+                    patternListEntry.value.patternValue
                 )
             }
 
-            is SeparatorItemData -> {
+            is SeparatorPatternListEntry -> {
                 val valueLabel =
-                    createLabel(labelX, y - 4 + this.height / 2, this.width, 0xFFFFFF, listItemData.value)
+                    createLabel(labelX, y - 4 + this.height / 2, this.width, 0xFFFFFF, patternListEntry.value)
                 valueLabel.setCentered(true)
             }
         }
 
-        val buttons: List<ButtonId> = when (listItemData.type) {
-            ListItemData.Type.PATTERN -> {
-                if (listItemData !is PatternListItemData) listOf()
+        val buttons: List<ButtonId> = when (patternListEntry.type) {
+            PatternListEntry.Type.PATTERN -> {
+                if (patternListEntry !is PatternPatternListEntry) listOf()
                 else ButtonId.entries.filter {
-                    !(it == ButtonId.ENABLE && listItemData.value.enabled
-                        || it == ButtonId.DISABLE && !listItemData.value.enabled)
+                    !(it == ButtonId.ENABLE && patternListEntry.value.enabled
+                        || it == ButtonId.DISABLE && !patternListEntry.value.enabled)
                 }.reversed()
             }
 
-            ListItemData.Type.EMPTY_SCOPE -> listOf(ButtonId.ADD)
+            PatternListEntry.Type.EMPTY_SCOPE -> listOf(ButtonId.ADD)
             else -> listOf()
         }
 
@@ -113,7 +113,7 @@ class PatternListItemWidget(
     }
 
     private fun executeButton(buttonId: ButtonId) {
-        eventHandler?.invoke(this, listItemData, buttonId)
+        eventHandler?.invoke(this, patternListEntry, buttonId)
     }
 
     override fun render(mouseX: Int, mouseY: Int, selected: Boolean, drawContext: DrawContext?) {

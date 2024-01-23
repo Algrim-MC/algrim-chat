@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,6 @@
 
 package mc.algrim.fabric.chat.gui.data
 
-class SeparatorItemData(val value: String) : ListItemData {
-    override val scope: ListItemData.Scope = ListItemData.Scope.NONE
-    override val type = ListItemData.Type.SEPARATOR
+class EmptyPatternListEntry(override val scope: PatternListEntry.Scope) : PatternListEntry {
+    override val type = PatternListEntry.Type.EMPTY_SCOPE
 }
