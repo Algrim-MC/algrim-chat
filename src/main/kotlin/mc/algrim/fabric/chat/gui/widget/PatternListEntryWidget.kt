@@ -23,6 +23,7 @@ import fi.dy.masa.malilib.gui.button.IButtonActionListener
 import fi.dy.masa.malilib.gui.widgets.WidgetLabel
 import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase
 import fi.dy.masa.malilib.render.RenderUtils
+import mc.algrim.fabric.chat.gui.data.EmptyPatternListEntry
 import mc.algrim.fabric.chat.gui.data.PatternListEntry
 import mc.algrim.fabric.chat.gui.data.PatternPatternListEntry
 import mc.algrim.fabric.chat.gui.data.SeparatorPatternListEntry
@@ -33,61 +34,68 @@ class PatternListEntryWidget(
     x: Int,
     y: Int,
     width: Int,
-    private val patternListEntry: PatternListEntry,
+    entry: PatternListEntry,
     listIndex: Int,
-    nameColumnWidth: Int,
+    private val nameColumnWidth: Int,
     private val eventHandler: ((listItem: PatternListEntryWidget, patternListEntry: PatternListEntry, buttonId: ButtonId) -> Unit)? = null
-) : WidgetListEntryBase<PatternListEntry>(x, y, width, 24, patternListEntry, listIndex) {
+) : WidgetListEntryBase<PatternListEntry>(x, y, width, 24, entry, listIndex) {
 
     init {
+        when (entry) {
+            is PatternPatternListEntry -> initPatternEntry(entry)
+            is SeparatorPatternListEntry -> initSeparatorEntry(entry)
+            is EmptyPatternListEntry -> initEmptyEntry()
+        }
+    }
+
+    private fun initPatternEntry(patternEntry: PatternPatternListEntry) {
         var labelX = x + 10
-        when (patternListEntry) {
-            is PatternPatternListEntry -> {
-                val nameLabel = createLabel(
-                    labelX,
-                    y - 4 + this.height / 2,
-                    nameColumnWidth,
-                    0xFFFFFF,
-                    patternListEntry.value.name
-                )
-                labelX += nameLabel.width + 10
 
-                createLabel(
-                    labelX,
-                    y - 4 + this.height / 2,
-                    this.width - nameColumnWidth - 200,
-                    0xFFFFFF,
-                    patternListEntry.value.patternValue
-                )
-            }
+        val nameLabel = createLabel(
+            labelX,
+            y - 4 + this.height / 2,
+            nameColumnWidth,
+            0xFFFFFF,
+            patternEntry.value.name
+        )
+        labelX += nameLabel.width + 10
 
-            is SeparatorPatternListEntry -> {
-                val valueLabel =
-                    createLabel(labelX, y - 4 + this.height / 2, this.width, 0xFFFFFF, patternListEntry.value)
-                valueLabel.setCentered(true)
-            }
-        }
+        createLabel(
+            labelX,
+            y - 4 + this.height / 2,
+            this.width - nameColumnWidth - 190,
+            0xFFFFFF,
+            patternEntry.value.patternValue
+        )
 
-        val buttons: List<ButtonId> = when (patternListEntry.type) {
-            PatternListEntry.Type.PATTERN -> {
-                if (patternListEntry !is PatternPatternListEntry) listOf()
-                else ButtonId.entries.filter {
-                    !(it == ButtonId.ENABLE && patternListEntry.value.enabled
-                        || it == ButtonId.DISABLE && !patternListEntry.value.enabled)
-                }.reversed()
-            }
+        var buttonX = this.width
+        val buttons = ButtonId.entries.filter {
+            !(it == ButtonId.ENABLE && patternEntry.value.enabled
+                || it == ButtonId.DISABLE && !patternEntry.value.enabled)
+        }.reversed()
 
-            PatternListEntry.Type.EMPTY_SCOPE -> listOf(ButtonId.ADD)
-            else -> listOf()
-        }
-
-        var buttonX = this.width - 10
         for (buttonId in buttons) {
-            val newButton =
+            val button =
                 createButton(buttonX, y, buttonId.displayName) { _: ButtonBase, _: Int -> executeButton(buttonId) }
-            newButton.x -= newButton.width + 2
-            buttonX -= newButton.width + 2
+            button.x -= button.width + 2
+            buttonX -= button.width + 2
         }
+    }
+
+    private fun initSeparatorEntry(separatorEntry: SeparatorPatternListEntry) {
+        val labelX = x + 10
+        val label = createLabel(labelX, y - 4 + this.height / 2, this.width, 0xFFFFFF, separatorEntry.value)
+
+        label.setCentered(true)
+    }
+
+    private fun initEmptyEntry() {
+        val buttonX = this.width
+        val addButtonId = ButtonId.ADD
+        val button =
+            createButton(buttonX, y, addButtonId.displayName) { _: ButtonBase, _: Int -> executeButton(addButtonId) }
+
+        button.x -= button.width + 2
     }
 
     private fun createLabel(x: Int, y: Int, width: Int, colour: Int, text: String): WidgetLabel {
@@ -113,7 +121,7 @@ class PatternListEntryWidget(
     }
 
     private fun executeButton(buttonId: ButtonId) {
-        eventHandler?.invoke(this, patternListEntry, buttonId)
+        eventHandler?.invoke(this, entry!!, buttonId)
     }
 
     override fun render(mouseX: Int, mouseY: Int, selected: Boolean, drawContext: DrawContext?) {
