@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -23,72 +23,79 @@ import fi.dy.masa.malilib.gui.button.IButtonActionListener
 import fi.dy.masa.malilib.gui.widgets.WidgetLabel
 import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase
 import fi.dy.masa.malilib.render.RenderUtils
-import mc.algrim.fabric.chat.gui.data.ListItemData
-import mc.algrim.fabric.chat.gui.data.PatternListItemData
-import mc.algrim.fabric.chat.gui.data.SeparatorItemData
+import mc.algrim.fabric.chat.gui.data.EmptyEntryData
+import mc.algrim.fabric.chat.gui.data.PatternEntryData
+import mc.algrim.fabric.chat.gui.data.PatternListEntryData
+import mc.algrim.fabric.chat.gui.data.SeparatorEntryData
 import net.minecraft.client.gui.DrawContext
 import kotlin.math.max
-import kotlin.math.min
 
-class PatternListItemWidget(
+class PatternListEntryWidget(
     x: Int,
     y: Int,
     width: Int,
-    private val listItemData: ListItemData,
+    entry: PatternListEntryData,
     listIndex: Int,
-    private val eventHandler: ((listItem: PatternListItemWidget, listItemData: ListItemData, buttonId: ButtonId) -> Unit)? = null
-) : WidgetListEntryBase<ListItemData>(x, y, width, 24, listItemData, listIndex) {
+    private val nameColumnWidth: Int,
+    private val eventHandler: ((listItem: PatternListEntryWidget, patternListEntryData: PatternListEntryData, buttonId: ButtonId) -> Unit)? = null
+) : WidgetListEntryBase<PatternListEntryData>(x, y, width, 24, entry, listIndex) {
 
     init {
+        when (entry) {
+            is PatternEntryData -> initPatternEntry(entry)
+            is SeparatorEntryData -> initSeparatorEntry(entry)
+            is EmptyEntryData -> initEmptyEntry()
+        }
+    }
+
+    private fun initPatternEntry(patternEntry: PatternEntryData) {
         var labelX = x + 10
-        when (listItemData) {
-            is PatternListItemData -> {
-                val labelWidth = ((this.width - 20) * 0.20).toInt()
-                val nameLabel = createLabel(
-                    labelX,
-                    y - 4 + this.height / 2,
-                    labelWidth,
-                    0xFFFFFF,
-                    listItemData.value.name
-                )
-                labelX += nameLabel.width + 10
-                createLabel(
-                    labelX,
-                    y - 4 + this.height / 2,
-                    this.width - labelWidth - 200,
-                    0xFFFFFF,
-                    listItemData.value.patternValue
-                )
-            }
 
-            is SeparatorItemData -> {
-                val valueLabelSize = min(this.getStringWidth(listItemData.value) + 10, this.width - 20)
-                val valueLabel =
-                    createLabel(labelX, y - 4 + this.height / 2, valueLabelSize, 0xFFFFFF, listItemData.value)
-                valueLabel.x += (this.width - valueLabel.width) / 2
-            }
-        }
+        val nameLabel = createLabel(
+            labelX,
+            y - 4 + this.height / 2,
+            nameColumnWidth,
+            0xFFFFFF,
+            patternEntry.value.name
+        )
+        labelX += nameLabel.width + 10
 
-        val buttons: List<ButtonId> = when (listItemData.type) {
-            ListItemData.Type.PATTERN -> {
-                if (listItemData !is PatternListItemData) listOf()
-                else ButtonId.entries.filter {
-                    !(it == ButtonId.ENABLE && listItemData.value.enabled
-                        || it == ButtonId.DISABLE && !listItemData.value.enabled)
-                }.reversed()
-            }
+        createLabel(
+            labelX,
+            y - 4 + this.height / 2,
+            this.width - nameColumnWidth - 190,
+            0xFFFFFF,
+            patternEntry.value.patternValue
+        )
 
-            ListItemData.Type.EMPTY_SCOPE -> listOf(ButtonId.ADD)
-            else -> listOf()
-        }
+        var buttonX = this.width
+        val buttons = ButtonId.entries.filter {
+            !(it == ButtonId.ENABLE && patternEntry.value.enabled
+                || it == ButtonId.DISABLE && !patternEntry.value.enabled)
+        }.reversed()
 
-        var buttonX = this.width - 10
         for (buttonId in buttons) {
-            val newButton =
+            val button =
                 createButton(buttonX, y, buttonId.displayName) { _: ButtonBase, _: Int -> executeButton(buttonId) }
-            newButton.x -= newButton.width + 2
-            buttonX -= newButton.width + 2
+            button.x -= button.width + 2
+            buttonX -= button.width + 2
         }
+    }
+
+    private fun initSeparatorEntry(separatorEntry: SeparatorEntryData) {
+        val labelX = x + 10
+        val label = createLabel(labelX, y - 4 + this.height / 2, this.width, 0xFFFFFF, separatorEntry.value)
+
+        label.setCentered(true)
+    }
+
+    private fun initEmptyEntry() {
+        val buttonX = this.width
+        val addButtonId = ButtonId.ADD
+        val button =
+            createButton(buttonX, y, addButtonId.displayName) { _: ButtonBase, _: Int -> executeButton(addButtonId) }
+
+        button.x -= button.width + 2
     }
 
     private fun createLabel(x: Int, y: Int, width: Int, colour: Int, text: String): WidgetLabel {
@@ -114,7 +121,7 @@ class PatternListItemWidget(
     }
 
     private fun executeButton(buttonId: ButtonId) {
-        eventHandler?.invoke(this, listItemData, buttonId)
+        eventHandler?.invoke(this, entry!!, buttonId)
     }
 
     override fun render(mouseX: Int, mouseY: Int, selected: Boolean, drawContext: DrawContext?) {

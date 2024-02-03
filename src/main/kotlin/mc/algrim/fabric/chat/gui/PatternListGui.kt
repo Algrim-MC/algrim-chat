@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -20,19 +20,20 @@ package mc.algrim.fabric.chat.gui
 import fi.dy.masa.malilib.gui.GuiBase
 import fi.dy.masa.malilib.gui.GuiListBase
 import mc.algrim.fabric.chat.config.Config
-import mc.algrim.fabric.chat.gui.data.EmptyListItemData
-import mc.algrim.fabric.chat.gui.data.ListItemData
-import mc.algrim.fabric.chat.gui.data.PatternListItemData
-import mc.algrim.fabric.chat.gui.data.SeparatorItemData
+import mc.algrim.fabric.chat.gui.data.*
 import mc.algrim.fabric.chat.gui.widget.ConfigTabWidget
-import mc.algrim.fabric.chat.gui.widget.PatternListItemWidget
+import mc.algrim.fabric.chat.gui.widget.PatternListEntryWidget
+import mc.algrim.fabric.chat.gui.widget.PatternListHeaderWidget
 import mc.algrim.fabric.chat.gui.widget.PatternListWidget
 import java.util.*
 
-class PatternListGui : GuiListBase<ListItemData, PatternListItemWidget, PatternListWidget>(10, 40) {
-    val patterns = mutableListOf<ListItemData>()
-    val globalPatterns = mutableListOf<PatternListItemData>()
-    val serverPatterns = mutableListOf<PatternListItemData>()
+class PatternListGui : GuiListBase<PatternListEntryData, PatternListEntryWidget, PatternListWidget>(10, 64) {
+    val patterns = mutableListOf<PatternListEntryData>()
+    val globalPatterns = mutableListOf<PatternEntryData>()
+    val serverPatterns = mutableListOf<PatternEntryData>()
+
+    val nameColumnWidth: Int
+        get() = (((this.browserWidth - 20) * 0.15).toInt())
 
     init {
         this.setTitle("Patterns")
@@ -42,6 +43,7 @@ class PatternListGui : GuiListBase<ListItemData, PatternListItemWidget, PatternL
         initLists()
         super.initGui()
         addWidget(ConfigTabWidget(10, 22, ::onTabChanged))
+        addWidget(PatternListHeaderWidget(10, 46, this.browserWidth, 20, this.nameColumnWidth))
     }
 
     private fun initLists() {
@@ -51,20 +53,25 @@ class PatternListGui : GuiListBase<ListItemData, PatternListItemWidget, PatternL
 
         if (serverPatternValues != null) {
             if (serverPatternValues.isNotEmpty()) {
-                serverPatterns.addAll(serverPatternValues.map { PatternListItemData(it, ListItemData.Scope.SERVER) })
+                serverPatterns.addAll(serverPatternValues.mapIndexed { i, it ->
+                    PatternEntryData(it, PatternScope.SERVER, i)
+                })
+
                 patterns.addAll(serverPatterns)
             } else {
-                patterns.add(EmptyListItemData(ListItemData.Scope.SERVER))
+                patterns.add(EmptyEntryData(PatternScope.SERVER))
             }
         }
 
-        patterns.add(SeparatorItemData("<<<<<   ↑ Server / Global ↓   >>>>>"))
+        patterns.add(SeparatorEntryData("<<<<<   ↑ Server / Global ↓   >>>>>"))
 
         if (globalPatternValues.isNotEmpty()) {
-            globalPatterns.addAll(globalPatternValues.map { PatternListItemData(it, ListItemData.Scope.GLOBAL) })
+            globalPatterns.addAll(globalPatternValues.mapIndexed { i, it ->
+                PatternEntryData(it, PatternScope.GLOBAL, i)
+            })
             patterns.addAll(globalPatterns)
         } else {
-            patterns.add(EmptyListItemData(ListItemData.Scope.GLOBAL))
+            patterns.add(EmptyEntryData(PatternScope.GLOBAL))
         }
     }
 
@@ -84,56 +91,62 @@ class PatternListGui : GuiListBase<ListItemData, PatternListItemWidget, PatternL
         }
     }
 
+    // This whole thing is a mess, but I've spent way too much time thinking of a better way of doing this. :(
     private fun onButtonClicked(
-        listItem: PatternListItemWidget, itemData: ListItemData, buttonId: PatternListItemWidget.ButtonId
+        listItem: PatternListEntryWidget, entryData: PatternListEntryData, buttonId: PatternListEntryWidget.ButtonId
     ) {
-        val entries = this.listWidget!!.currentEntries
-        val patternIndexOffset =
-            entries.indexOfFirst { it.scope == itemData.scope && it.type == ListItemData.Type.PATTERN }
-        val index =
-            if (itemData.type == ListItemData.Type.EMPTY_SCOPE) 0 else listItem.listIndex - patternIndexOffset
 
-        val modified = when (buttonId) {
-            PatternListItemWidget.ButtonId.EDIT -> {
-                if (itemData !is PatternListItemData) return
+        val (index, relativePatterns) =
+            if (entryData is PatternEntryData) {
+                entryData.index to when (entryData.scope) {
+                    PatternScope.GLOBAL -> globalPatterns
+                    PatternScope.SERVER -> serverPatterns
+                }
+            } else 0 to null
+
+        val modified = if (buttonId == PatternListEntryWidget.ButtonId.ADD && entryData is ScopedEntryData) {
+            val newPatternGui = NewPatternGui(scope = entryData.scope, patternIndex = index)
+
+            newPatternGui.setParent(this)
+            openGui(newPatternGui)
+            false
+        } else if (entryData is PatternEntryData) when (buttonId) {
+            PatternListEntryWidget.ButtonId.ENABLE,
+            PatternListEntryWidget.ButtonId.DISABLE -> {
+                relativePatterns!![index] = PatternEntryData(
+                    entryData.value.withEnabled(buttonId == PatternListEntryWidget.ButtonId.ENABLE),
+                    entryData.scope,
+                    index
+                )
+                true
+            }
+
+            PatternListEntryWidget.ButtonId.EDIT -> {
                 val newPatternGui =
-                    NewPatternGui(itemData.value.name, itemData.value.patternValue, itemData.scope, index, true)
-                newPatternGui.setParent(this)
+                    NewPatternGui(entryData.value.name, entryData.value.patternValue, entryData.scope, index, true)
 
-                GuiBase.openGui(newPatternGui)
+                newPatternGui.setParent(this)
+                openGui(newPatternGui)
                 false
             }
 
-            PatternListItemWidget.ButtonId.ADD -> {
-                val newPatternGui = NewPatternGui(scope = itemData.scope, patternIndex = index)
-                newPatternGui.setParent(this)
-
-                GuiBase.openGui(newPatternGui)
-                false
+            PatternListEntryWidget.ButtonId.REMOVE -> {
+                relativePatterns!!.removeAt(index)
+                true
             }
 
-            else -> when (itemData.scope) {
-                ListItemData.Scope.SERVER -> {
+            else -> when (entryData.scope) {
+                PatternScope.SERVER -> {
                     when (buttonId) {
-                        PatternListItemWidget.ButtonId.ENABLE,
-                        PatternListItemWidget.ButtonId.DISABLE -> {
-                            if (itemData is PatternListItemData) {
-                                serverPatterns[index] = PatternListItemData(
-                                    itemData.value.withEnabled(buttonId == PatternListItemWidget.ButtonId.ENABLE),
-                                    ListItemData.Scope.SERVER
-                                )
-                                true
-                            } else false
-                        }
 
-                        PatternListItemWidget.ButtonId.MOVE_UP -> {
+                        PatternListEntryWidget.ButtonId.MOVE_UP -> {
                             if (index > 0) {
                                 Collections.swap(serverPatterns, index, index - 1)
                                 true
                             } else false
                         }
 
-                        PatternListItemWidget.ButtonId.MOVE_DOWN -> {
+                        PatternListEntryWidget.ButtonId.MOVE_DOWN -> {
                             if (index < serverPatterns.size - 1) {
                                 Collections.swap(serverPatterns, index, index + 1)
                                 true
@@ -143,29 +156,14 @@ class PatternListGui : GuiListBase<ListItemData, PatternListItemWidget, PatternL
                             } else false
                         }
 
-                        PatternListItemWidget.ButtonId.REMOVE -> {
-                            serverPatterns.removeAt(index)
-                            true
-                        }
-
                         else -> false
                     }
                 }
 
-                ListItemData.Scope.GLOBAL -> {
+                PatternScope.GLOBAL -> {
                     when (buttonId) {
-                        PatternListItemWidget.ButtonId.ENABLE,
-                        PatternListItemWidget.ButtonId.DISABLE -> {
-                            if (itemData is PatternListItemData) {
-                                globalPatterns[index] = PatternListItemData(
-                                    itemData.value.withEnabled(buttonId == PatternListItemWidget.ButtonId.ENABLE),
-                                    ListItemData.Scope.GLOBAL
-                                )
-                                true
-                            } else false
-                        }
 
-                        PatternListItemWidget.ButtonId.MOVE_UP -> {
+                        PatternListEntryWidget.ButtonId.MOVE_UP -> {
                             if (index > 0) {
                                 Collections.swap(globalPatterns, index, index - 1)
                                 true
@@ -175,26 +173,18 @@ class PatternListGui : GuiListBase<ListItemData, PatternListItemWidget, PatternL
                             } else false
                         }
 
-                        PatternListItemWidget.ButtonId.MOVE_DOWN -> {
+                        PatternListEntryWidget.ButtonId.MOVE_DOWN -> {
                             if (index < globalPatterns.size - 1) {
                                 Collections.swap(globalPatterns, index, index + 1)
                                 true
                             } else false
                         }
 
-                        PatternListItemWidget.ButtonId.REMOVE -> {
-                            globalPatterns.removeAt(index)
-                            true
-                        }
-
                         else -> false
                     }
                 }
-
-                else -> false
-
             }
-        }
+        } else false
 
         if (modified) {
             updateConfig()

@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -19,7 +19,7 @@ package mc.algrim.fabric.chat.gui.widget
 
 import fi.dy.masa.malilib.gui.widgets.WidgetListBase
 import mc.algrim.fabric.chat.gui.PatternListGui
-import mc.algrim.fabric.chat.gui.data.ListItemData
+import mc.algrim.fabric.chat.gui.data.PatternListEntryData
 
 class PatternListWidget(
     x: Int,
@@ -27,15 +27,23 @@ class PatternListWidget(
     width: Int,
     height: Int,
     val parentGui: PatternListGui,
-    val eventHandler: ((listItem: PatternListItemWidget, listItemData: ListItemData, buttonId: PatternListItemWidget.ButtonId) -> Unit)? = null
-) : WidgetListBase<ListItemData, PatternListItemWidget>(x, y, width, height, {}) {
+    val eventHandler: ((listItem: PatternListEntryWidget, patternListEntryData: PatternListEntryData, buttonId: PatternListEntryWidget.ButtonId) -> Unit)? = null
+) : WidgetListBase<PatternListEntryData, PatternListEntryWidget>(x, y, width, height, {}) {
     override fun createListEntryWidget(
-        x: Int, y: Int, listIndex: Int, isOdd: Boolean, entry: ListItemData
-    ): PatternListItemWidget {
-        return PatternListItemWidget(x, y, this.browserEntryWidth, entry, listIndex, eventHandler)
+        x: Int, y: Int, listIndex: Int, isOdd: Boolean, entry: PatternListEntryData
+    ): PatternListEntryWidget {
+        return PatternListEntryWidget(
+            x,
+            y,
+            this.browserEntryWidth,
+            entry,
+            listIndex,
+            parentGui.nameColumnWidth,
+            eventHandler
+        )
     }
 
-    override fun getAllEntries(): Collection<ListItemData> {
+    override fun getAllEntries(): Collection<PatternListEntryData> {
         return parentGui.patterns
     }
 }

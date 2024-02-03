@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ import mc.algrim.fabric.chat.AlgrimChat.MOD_NAME
 import mc.algrim.fabric.chat.config.Config
 import mc.algrim.fabric.chat.gui.ConfigGui
 import mc.algrim.fabric.chat.gui.NewPatternGui
-import mc.algrim.fabric.chat.gui.data.ListItemData
+import mc.algrim.fabric.chat.gui.data.PatternScope
 
 object HotkeyHandler : IKeybindProvider, IHotkeyCallback {
 
@@ -53,7 +53,7 @@ object HotkeyHandler : IKeybindProvider, IHotkeyCallback {
             }
 
             Config.globalConfig.debugGuiHotKey.keybind -> {
-                GuiBase.openGui(NewPatternGui(scope = ListItemData.Scope.GLOBAL, patternIndex = 0))
+                GuiBase.openGui(NewPatternGui(scope = PatternScope.GLOBAL, patternIndex = 0))
                 true
             }
 

@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -28,7 +28,7 @@ import mc.algrim.fabric.chat.ChatProcessor
 import mc.algrim.fabric.chat.components.Pattern
 import mc.algrim.fabric.chat.config.Config
 import mc.algrim.fabric.chat.config.option.PatternOption
-import mc.algrim.fabric.chat.gui.data.ListItemData
+import mc.algrim.fabric.chat.gui.data.PatternScope
 import mc.algrim.fabric.chat.gui.widget.GuiTextField
 import net.minecraft.client.gui.widget.TextWidget
 import net.minecraft.screen.ScreenTexts
@@ -37,7 +37,7 @@ import net.minecraft.text.Text
 class NewPatternGui(
     private var name: String = "",
     private var patternStr: String = "",
-    private val scope: ListItemData.Scope,
+    private val scope: PatternScope,
     private val patternIndex: Int,
     private val replace: Boolean = false
 ) : AlgrimGuiBase() {
@@ -113,9 +113,8 @@ class NewPatternGui(
             } else {
                 Pattern.fromString(patternStr)
                 when (scope) {
-                    ListItemData.Scope.GLOBAL -> updateConfigPatterns(Config.globalConfig.patterns)
-                    ListItemData.Scope.SERVER -> updateConfigPatterns(Config.serverConfig?.patterns)
-                    else -> {}
+                    PatternScope.GLOBAL -> updateConfigPatterns(Config.globalConfig.patterns)
+                    PatternScope.SERVER -> updateConfigPatterns(Config.serverConfig?.patterns)
                 }
             }
         } catch (e: IllegalArgumentException) {
