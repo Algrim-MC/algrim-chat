@@ -23,10 +23,10 @@ import fi.dy.masa.malilib.gui.button.IButtonActionListener
 import fi.dy.masa.malilib.gui.widgets.WidgetLabel
 import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase
 import fi.dy.masa.malilib.render.RenderUtils
-import mc.algrim.fabric.chat.gui.data.EmptyPatternListEntry
-import mc.algrim.fabric.chat.gui.data.PatternListEntry
-import mc.algrim.fabric.chat.gui.data.PatternPatternListEntry
-import mc.algrim.fabric.chat.gui.data.SeparatorPatternListEntry
+import mc.algrim.fabric.chat.gui.data.EmptyEntryData
+import mc.algrim.fabric.chat.gui.data.PatternEntryData
+import mc.algrim.fabric.chat.gui.data.PatternListEntryData
+import mc.algrim.fabric.chat.gui.data.SeparatorEntryData
 import net.minecraft.client.gui.DrawContext
 import kotlin.math.max
 
@@ -34,21 +34,21 @@ class PatternListEntryWidget(
     x: Int,
     y: Int,
     width: Int,
-    entry: PatternListEntry,
+    entry: PatternListEntryData,
     listIndex: Int,
     private val nameColumnWidth: Int,
-    private val eventHandler: ((listItem: PatternListEntryWidget, patternListEntry: PatternListEntry, buttonId: ButtonId) -> Unit)? = null
-) : WidgetListEntryBase<PatternListEntry>(x, y, width, 24, entry, listIndex) {
+    private val eventHandler: ((listItem: PatternListEntryWidget, patternListEntryData: PatternListEntryData, buttonId: ButtonId) -> Unit)? = null
+) : WidgetListEntryBase<PatternListEntryData>(x, y, width, 24, entry, listIndex) {
 
     init {
         when (entry) {
-            is PatternPatternListEntry -> initPatternEntry(entry)
-            is SeparatorPatternListEntry -> initSeparatorEntry(entry)
-            is EmptyPatternListEntry -> initEmptyEntry()
+            is PatternEntryData -> initPatternEntry(entry)
+            is SeparatorEntryData -> initSeparatorEntry(entry)
+            is EmptyEntryData -> initEmptyEntry()
         }
     }
 
-    private fun initPatternEntry(patternEntry: PatternPatternListEntry) {
+    private fun initPatternEntry(patternEntry: PatternEntryData) {
         var labelX = x + 10
 
         val nameLabel = createLabel(
@@ -82,7 +82,7 @@ class PatternListEntryWidget(
         }
     }
 
-    private fun initSeparatorEntry(separatorEntry: SeparatorPatternListEntry) {
+    private fun initSeparatorEntry(separatorEntry: SeparatorEntryData) {
         val labelX = x + 10
         val label = createLabel(labelX, y - 4 + this.height / 2, this.width, 0xFFFFFF, separatorEntry.value)
 

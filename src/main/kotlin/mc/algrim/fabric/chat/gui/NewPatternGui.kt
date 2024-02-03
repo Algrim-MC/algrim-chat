@@ -28,7 +28,7 @@ import mc.algrim.fabric.chat.ChatProcessor
 import mc.algrim.fabric.chat.components.Pattern
 import mc.algrim.fabric.chat.config.Config
 import mc.algrim.fabric.chat.config.option.PatternOption
-import mc.algrim.fabric.chat.gui.data.PatternListEntry
+import mc.algrim.fabric.chat.gui.data.PatternScope
 import mc.algrim.fabric.chat.gui.widget.GuiTextField
 import net.minecraft.client.gui.widget.TextWidget
 import net.minecraft.screen.ScreenTexts
@@ -37,7 +37,7 @@ import net.minecraft.text.Text
 class NewPatternGui(
     private var name: String = "",
     private var patternStr: String = "",
-    private val scope: PatternListEntry.Scope,
+    private val scope: PatternScope,
     private val patternIndex: Int,
     private val replace: Boolean = false
 ) : AlgrimGuiBase() {
@@ -113,9 +113,8 @@ class NewPatternGui(
             } else {
                 Pattern.fromString(patternStr)
                 when (scope) {
-                    PatternListEntry.Scope.GLOBAL -> updateConfigPatterns(Config.globalConfig.patterns)
-                    PatternListEntry.Scope.SERVER -> updateConfigPatterns(Config.serverConfig?.patterns)
-                    else -> {}
+                    PatternScope.GLOBAL -> updateConfigPatterns(Config.globalConfig.patterns)
+                    PatternScope.SERVER -> updateConfigPatterns(Config.serverConfig?.patterns)
                 }
             }
         } catch (e: IllegalArgumentException) {

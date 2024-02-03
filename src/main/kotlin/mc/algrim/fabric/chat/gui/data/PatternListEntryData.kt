@@ -17,7 +17,25 @@
 
 package mc.algrim.fabric.chat.gui.data
 
-class SeparatorPatternListEntry(val value: String) : PatternListEntry {
-    override val scope: PatternListEntry.Scope = PatternListEntry.Scope.NONE
-    override val type = PatternListEntry.Type.SEPARATOR
+import mc.algrim.fabric.chat.config.option.PatternOption
+
+sealed interface PatternListEntryData
+
+sealed interface ScopedEntryData : PatternListEntryData {
+    val scope: PatternScope
+}
+
+data class EmptyEntryData(override val scope: PatternScope) : ScopedEntryData
+
+data class PatternEntryData(
+    val value: PatternOption.PatternOptionValue,
+    override val scope: PatternScope,
+    val index: Int
+) : ScopedEntryData
+
+data class SeparatorEntryData(val value: String) : PatternListEntryData
+
+enum class PatternScope {
+    GLOBAL,
+    SERVER
 }

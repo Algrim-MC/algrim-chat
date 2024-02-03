@@ -23,7 +23,7 @@ import mc.algrim.fabric.chat.AlgrimChat.MOD_NAME
 import mc.algrim.fabric.chat.config.Config
 import mc.algrim.fabric.chat.gui.ConfigGui
 import mc.algrim.fabric.chat.gui.NewPatternGui
-import mc.algrim.fabric.chat.gui.data.PatternListEntry
+import mc.algrim.fabric.chat.gui.data.PatternScope
 
 object HotkeyHandler : IKeybindProvider, IHotkeyCallback {
 
@@ -53,7 +53,7 @@ object HotkeyHandler : IKeybindProvider, IHotkeyCallback {
             }
 
             Config.globalConfig.debugGuiHotKey.keybind -> {
-                GuiBase.openGui(NewPatternGui(scope = PatternListEntry.Scope.GLOBAL, patternIndex = 0))
+                GuiBase.openGui(NewPatternGui(scope = PatternScope.GLOBAL, patternIndex = 0))
                 true
             }
 
