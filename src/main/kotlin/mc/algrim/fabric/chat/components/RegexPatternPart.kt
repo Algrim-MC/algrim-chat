@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -29,6 +29,9 @@ class RegexPatternPart(override val pattern: String, override val index: Int) : 
     init {
         val remainder = pattern.substring(index)
         var partLength = 0
+
+        if (remainder.length < 2)
+            throw IllegalArgumentException("Pattern '$pattern', is invalid. Unexpected end of pattern.")
 
         for ((i, char) in remainder.toCharArray().withIndex()) {
             if (i == 0) {
