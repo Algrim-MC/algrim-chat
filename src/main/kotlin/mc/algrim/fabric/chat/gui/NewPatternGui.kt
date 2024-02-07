@@ -151,14 +151,16 @@ class NewPatternGui(
         try {
             if (patternStr == "") {
                 showMessage("No pattern to test.")
+                this.resultText = ScreenTexts.EMPTY
                 return
             }
 
             val pattern = Pattern.fromString(patternStr)
             val CSP = pattern.toCharStylePair(testMsgStr)?.toMutableList()
 
-            if (CSP == null) {
+            if (CSP == null || CSP.size != testMsgStr.length) {
                 showMessage("This pattern didn't match the test message.")
+                this.resultText = ScreenTexts.EMPTY
                 return
             }
 
