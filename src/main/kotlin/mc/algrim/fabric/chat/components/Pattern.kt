@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -49,21 +49,6 @@ class Pattern(val parts: Array<PatternPart>) {
         }
 
         return charStylePairs.toTypedArray()
-    }
-
-    fun applyStyles(content: String): String? {
-        var i = 0
-        val transformedPattern = StringBuilder()
-
-        for (part in parts) {
-            val transformedPart = part.apply(content, i)
-            transformedPart ?: return null
-
-            transformedPattern.append(transformedPart)
-            i = transformedPart.length
-        }
-
-        return transformedPattern.toString()
     }
 
     companion object {
