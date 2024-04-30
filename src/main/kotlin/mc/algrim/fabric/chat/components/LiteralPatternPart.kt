@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -31,7 +31,7 @@ class LiteralPatternPart(
 
     init {
         val remainder = pattern.substring(index)
-        val stringLiteralBuilder = StringBuilder()
+        val stringLiteralBuilder = StringBuilder(remainder.length)
         var escapeCharCount = 0
 
         for ((i, char) in remainder.toCharArray().withIndex()) {

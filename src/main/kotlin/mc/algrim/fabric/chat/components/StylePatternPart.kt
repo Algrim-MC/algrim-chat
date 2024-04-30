@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -44,8 +44,8 @@ class StylePatternPart(override val pattern: String, override val index: Int) : 
 
     init {
         val remainder = pattern.substring(index)
-        val styleStringBuilder = StringBuilder()
-        val valueStringBuilder = StringBuilder()
+        val styleStringBuilder = StringBuilder(remainder.length)
+        val valueStringBuilder = StringBuilder(remainder.length)
         var finishedStyleIndex = -1
         var partLength = 0
 

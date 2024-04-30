@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2024.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -100,7 +100,7 @@ object ChatProcessor {
                 ++groupId
             } else groupId
         }.aggregate { _, seg: Pair<StringBuilder, Style>?, (char, style), first ->
-            if (first) StringBuilder().append(char) to style
+            if (first) StringBuilder(messageCSPs.size).append(char) to style
             else {
                 seg!!.first.append(char)
                 seg

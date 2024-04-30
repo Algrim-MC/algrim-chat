@@ -24,7 +24,7 @@ class Pattern(val parts: Array<PatternPart>) {
 
     fun applyTransforms(content: String): String? {
         var i = 0
-        val transformedPattern = StringBuilder()
+        val transformedPattern = StringBuilder(content.length)
 
         for (part in parts) {
             val transformedPart = part.apply(content, i)
