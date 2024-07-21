@@ -1,9 +1,10 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("fabric-loom") version "1.6-SNAPSHOT"
+    id("fabric-loom") version "1.7-SNAPSHOT"
     id("maven-publish")
-    id("org.jetbrains.kotlin.jvm") version "1.9.23"
+    id("org.jetbrains.kotlin.jvm") version "2.0.0"
 }
 
 version = project.properties["mod_version"]!!
@@ -15,6 +16,7 @@ base {
 
 repositories {
     maven { url = uri("https://masa.dy.fi/maven") }
+    maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
@@ -23,7 +25,8 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
 
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.properties["fabric_kotlin_version"]}")
-    modImplementation("fi.dy.masa.malilib:malilib-fabric-1.20.6:${project.properties["malilib_version"]}")
+    // modImplementation("fi.dy.masa.malilib:malilib-fabric-1.20.6:${project.properties["malilib_version"]}")
+    modImplementation("com.github.sakura-ryoko:malilib:${project.properties["sr_malilib_tag"]}")
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.properties["fabric_version"]}")
 
@@ -52,8 +55,8 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.withType<KotlinCompile>().all {
-    kotlinOptions {
-        jvmTarget = "21"
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
     }
 }
 
@@ -64,7 +67,7 @@ tasks.jar {
 }
 
 tasks.wrapper {
-    gradleVersion = "8.7"
+    gradleVersion = "8.9"
     distributionType = Wrapper.DistributionType.ALL
 }
 
