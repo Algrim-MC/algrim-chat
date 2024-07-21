@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("fabric-loom") version "1.3-SNAPSHOT"
+    id("fabric-loom") version "1.6-SNAPSHOT"
     id("maven-publish")
-    id("org.jetbrains.kotlin.jvm") version "1.9.21"
+    id("org.jetbrains.kotlin.jvm") version "1.9.23"
 }
 
 version = project.properties["mod_version"]!!
@@ -23,9 +23,12 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
 
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.properties["fabric_kotlin_version"]}")
-    modImplementation("fi.dy.masa.malilib:malilib-fabric-${project.properties["minecraft_version"]}:${project.properties["malilib_version"]}")
+    modImplementation("fi.dy.masa.malilib:malilib-fabric-1.20.6:${project.properties["malilib_version"]}")
+
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.properties["fabric_version"]}")
 
     testImplementation(kotlin("test"))
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.test {
@@ -45,12 +48,12 @@ tasks.processResources {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release = 17
+    options.release = 21
 }
 
 tasks.withType<KotlinCompile>().all {
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "21"
     }
 }
 
@@ -60,29 +63,23 @@ tasks.jar {
     }
 }
 
-java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    withSourcesJar()
-
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+tasks.wrapper {
+    gradleVersion = "8.7"
+    distributionType = Wrapper.DistributionType.ALL
 }
 
-// configure the maven publication
+java {
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
         }
     }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
-    }
+    repositories {}
 }

@@ -9,8 +9,8 @@ should be styled, and how to style them.
 
 ## Dependencies
 
-- Minecraft: `1.20.4+`
-- [MaLiLib](https://www.curseforge.com/minecraft/mc-mods/malilib): `0.18.0+`
+- Minecraft: `1.20.6+`
+- [MaLiLib](https://www.curseforge.com/minecraft/mc-mods/malilib): `0.19.0+`
 - [fabric-language-kotlin](https://modrinth.com/mod/fabric-language-kotlin): `1.9.21+`
 
 ## Configuration
