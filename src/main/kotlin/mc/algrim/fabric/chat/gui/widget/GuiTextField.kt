@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2025.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -22,6 +22,10 @@ import net.minecraft.client.font.TextRenderer
 
 class GuiTextField(x: Int, y: Int, width: Int, height: Int, textRenderer: TextRenderer?) :
     GuiTextFieldGeneric(x, y, width, height, textRenderer) {
+
+    init {
+        this.setMaxLength(2048)
+    }
 
     // Workaround for field not being unfocused.
     override fun mouseClicked(mouseX: Double, mouseY: Double, mouseButton: Int): Boolean {
