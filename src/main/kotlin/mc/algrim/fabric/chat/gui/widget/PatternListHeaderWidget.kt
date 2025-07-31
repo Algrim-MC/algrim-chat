@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2024.
+ * Copyright (C) 2024-2025.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -34,7 +34,7 @@ class PatternListHeaderWidget(
             labelX,
             y - 4 + this.height / 2,
             nameColumnWidth,
-            0xFFFFFF,
+            (0xFFFFFFFF).toInt(),
             "Name"
         )
         labelX += nameLabel.width + 12
@@ -43,7 +43,7 @@ class PatternListHeaderWidget(
             labelX,
             y - 4 + this.height / 2,
             this.width - nameColumnWidth - 50,
-            0xFFFFFF,
+            (0xFFFFFFFF).toInt(),
             "Pattern"
         )
     }

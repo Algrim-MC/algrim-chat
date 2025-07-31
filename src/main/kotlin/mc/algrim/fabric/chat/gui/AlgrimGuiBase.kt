@@ -47,7 +47,14 @@ open class AlgrimGuiBase : GuiBase() {
     override fun render(drawContext: DrawContext, mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.render(drawContext, mouseX, mouseY, partialTicks)
         for (textWidget in textWidgets) {
-            drawContext.drawText(this.textRenderer, textWidget.message, textWidget.x, textWidget.y, 0xFFFFFF, true)
+            drawContext.drawText(
+                this.textRenderer,
+                textWidget.message,
+                textWidget.x,
+                textWidget.y,
+                (0xFFFFFFFF).toInt(),
+                true
+            )
         }
     }
 }

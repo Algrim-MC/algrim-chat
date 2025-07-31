@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023-2024.
+ * Copyright (C) 2023-2025.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -179,7 +179,7 @@ class NewPatternGui(
 
     private fun createTextLabel(x: Int, y: Int, text: String): WidgetLabel {
         val labelWidth = getStringWidth(text)
-        val label = WidgetLabel(x, y, labelWidth, 10, 0xFFFFFF, text)
+        val label = WidgetLabel(x, y, labelWidth, 10, (0xFFFFFFFF).toInt(), text)
         this.addWidget(label)
 
         return label
