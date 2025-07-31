@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2025.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -65,11 +65,15 @@ object Config : IWorldLoadListener {
     }
 
     private fun getGlobalConfigFile(): File {
-        return File(FileUtils.getConfigDirectory(), "$MOD_ID.json")
+        return FileUtils.getConfigDirectoryAsPath()
+            .resolve("$MOD_ID.json")
+            .toFile()
     }
 
     private fun getServerConfigFile(): File {
-        val configDir = File(FileUtils.getConfigDirectory(), MOD_ID)
+        val configDir = FileUtils.getConfigDirectoryAsPath()
+            .resolve(MOD_ID)
+            .toFile()
 
         if (!configDir.exists() && !configDir.mkdirs()) {
             AlgrimChat.logger.error("Unable to create config directory! '${configDir.path}'")

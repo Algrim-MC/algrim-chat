@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023-2024.
+ * Copyright (C) 2023-2025.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -55,7 +55,7 @@ class PatternListEntryWidget(
             labelX,
             y - 4 + this.height / 2,
             nameColumnWidth,
-            0xFFFFFF,
+            (0xFFFFFFFF).toInt(),
             patternEntry.value.name
         )
         labelX += nameLabel.width + 10
@@ -64,7 +64,7 @@ class PatternListEntryWidget(
             labelX,
             y - 4 + this.height / 2,
             this.width - nameColumnWidth - 190,
-            0xFFFFFF,
+            (0xFFFFFFFF).toInt(),
             patternEntry.value.patternValue
         )
 
@@ -84,7 +84,7 @@ class PatternListEntryWidget(
 
     private fun initSeparatorEntry(separatorEntry: SeparatorEntryData) {
         val labelX = x + 10
-        val label = createLabel(labelX, y - 4 + this.height / 2, this.width, 0xFFFFFF, separatorEntry.value)
+        val label = createLabel(labelX, y - 4 + this.height / 2, this.width, (0xFFFFFFFF).toInt(), separatorEntry.value)
 
         label.setCentered(true)
     }
@@ -124,11 +124,16 @@ class PatternListEntryWidget(
         eventHandler?.invoke(this, entry!!, buttonId)
     }
 
-    override fun render(mouseX: Int, mouseY: Int, selected: Boolean, drawContext: DrawContext?) {
+    override fun render(drawContext: DrawContext?, mouseX: Int, mouseY: Int, selected: Boolean) {
         RenderUtils.drawRect(
-            this.x, this.y, this.width - 10, this.height, (if (listIndex % 2 == 0) 0xA0101010 else 0xA0303030).toInt()
+            drawContext,
+            this.x,
+            this.y,
+            this.width - 10,
+            this.height,
+            (if (listIndex % 2 == 0) 0xA0101010 else 0xA0303030).toInt()
         )
-        super.render(mouseX, mouseY, selected, drawContext)
+        super.render(drawContext, mouseX, mouseY, selected)
     }
 
     enum class ButtonId(val displayName: String) {

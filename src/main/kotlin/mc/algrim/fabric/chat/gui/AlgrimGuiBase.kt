@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2025.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -18,6 +18,7 @@
 package mc.algrim.fabric.chat.gui
 
 import fi.dy.masa.malilib.gui.GuiBase
+import mc.algrim.fabric.chat.AlgrimChat
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.widget.TextWidget
 
@@ -26,6 +27,7 @@ open class AlgrimGuiBase : GuiBase() {
 
     fun addTextWidget(textWidget: TextWidget): TextWidget {
         textWidgets.add(textWidget)
+        AlgrimChat.logger.info("Added text")
         return textWidget
     }
 
@@ -42,10 +44,10 @@ open class AlgrimGuiBase : GuiBase() {
         clearTextWidgets()
     }
 
-    override fun render(drawContext: DrawContext?, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun render(drawContext: DrawContext, mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.render(drawContext, mouseX, mouseY, partialTicks)
         for (textWidget in textWidgets) {
-            drawContext?.drawText(this.textRenderer, textWidget.message, textWidget.x, textWidget.y, 0xFFFFFF, true)
+            drawContext.drawText(this.textRenderer, textWidget.message, textWidget.x, textWidget.y, 0xFFFFFF, true)
         }
     }
 }
