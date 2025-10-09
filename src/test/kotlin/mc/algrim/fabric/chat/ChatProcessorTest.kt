@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023-2024.
+ * Copyright (C) 2023-2025.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -21,28 +21,33 @@ import mc.algrim.fabric.chat.components.Pattern
 import net.minecraft.text.Style
 import net.minecraft.text.Text
 import net.minecraft.text.TextColor
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 
+@TestInstance(PER_CLASS)
 class ChatProcessorTest {
-    @Test
-    fun test() {
-        // Some sample messages
-        // [MOD] Barry: Stuff a mod named Barry would say.
-        // Carl: Stuff a player named Barry would say.
-        val testMsg =
-            Text.literal("[MOD]").append(" ").append("Barry").append(": ").append("Stuff a mod named Barry would say.")
-        val testMsg2 = Text.literal("Carl").append(": ").append("Stuff a player named Carl would say.")
 
-        val testPattern = Pattern.fromString("[#821212](/(\\\\[MOD] \\)?/)[!,#00FFFF](/\\\\w+/): [!,white](/.*/)")
+    @BeforeAll
+    fun setup() {
         ChatProcessor.enabled = true
+
+        val testPattern = Pattern.fromString("[#821212](/(\\[MOD] )?/)[!,#00FFFF](/\\w+/): [!,white](/.*/)")
         ChatProcessor.patterns.add(testPattern)
+    }
 
-        val styledTestMsg = ChatProcessor.execute(testMsg)
-        val styledTestMsg2 = ChatProcessor.execute(testMsg2)
+    @Test
+    fun testMod() {
+        // [MOD] Barry: Stuff a mod named Barry would say.
+        val modMessage =
+            Text.literal("[MOD]").append(" ").append("Barry").append(": ").append("Stuff a mod named Barry would say.")
+        val styledModMessage = ChatProcessor.execute(modMessage)
+        val actualModMsgStyles = mutableListOf<Pair<String, Style>>()
 
-        val expectedTestMsgStyles = listOf(
+        val expectedModMsgStyles = listOf(
             "[MOD] " to Style.EMPTY.withColor(colourOrThrow("#821212")),
             "Barry" to StyleUtils.strippedStyle.withColor(colourOrThrow("#00FFFF"))
                 .withParent(StyleUtils.strippedStyle),
@@ -51,7 +56,24 @@ class ChatProcessorTest {
                 .withParent(StyleUtils.strippedStyle)
         )
 
-        val expectedTestMsg2Styles = listOf(
+
+        styledModMessage.visit({ style: Style, content: String ->
+            println("$content $style")
+            actualModMsgStyles.add(content to style)
+            Optional.empty<Any?>()
+        }, Style.EMPTY)
+
+        assertContentEquals(expectedModMsgStyles, actualModMsgStyles)
+    }
+
+    @Test
+    fun testPlayer() {
+        // Carl: Stuff a player named Carl would say.
+        val playerMsg = Text.literal("Carl").append(": ").append("Stuff a player named Carl would say.")
+        val styledPlayerMsg = ChatProcessor.execute(playerMsg)
+        val actualPlayMsgStyles = mutableListOf<Pair<String, Style>>()
+
+        val expectedPlayerMsgStyles = listOf(
             "Carl" to Style.EMPTY.withColor(colourOrThrow("#00FFFF"))
                 .withParent(StyleUtils.strippedStyle),
             ": " to Style.EMPTY,
@@ -59,22 +81,13 @@ class ChatProcessorTest {
                 .withParent(StyleUtils.strippedStyle)
         )
 
-        val actualTestMsgStyles = mutableListOf<Pair<String, Style>>()
-        val actualTestMsg2Styles = mutableListOf<Pair<String, Style>>()
 
-        styledTestMsg.visit({ style: Style, content: String ->
-            println("$content $style")
-            actualTestMsgStyles.add(content to style)
+        styledPlayerMsg.visit({ style: Style, content: String ->
+            actualPlayMsgStyles.add(content to style)
             Optional.empty<Any?>()
         }, Style.EMPTY)
 
-        styledTestMsg2.visit({ style: Style, content: String ->
-            actualTestMsg2Styles.add(content to style)
-            Optional.empty<Any?>()
-        }, Style.EMPTY)
-
-        assertContentEquals(expectedTestMsgStyles, actualTestMsgStyles)
-        assertContentEquals(expectedTestMsg2Styles, actualTestMsg2Styles)
+        assertContentEquals(expectedPlayerMsgStyles, actualPlayMsgStyles)
     }
 
     private fun colourOrThrow(name: String) = TextColor.parse(name).orThrow
