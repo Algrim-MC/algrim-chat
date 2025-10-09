@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2025.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -45,52 +45,53 @@ class StylePatternPart(override val pattern: String, override val index: Int) : 
     init {
         val remainder = pattern.substring(index)
         val styleStringBuilder = StringBuilder()
-        val valueStringBuilder = StringBuilder()
-        var finishedStyleIndex = -1
-        var partLength = 0
+        var styleFinished = false
 
         if (!remainder.startsWith(openChar)) {
             throw IllegalArgumentException("Pattern '$pattern', invalid open char, should be '$openChar'")
         }
 
+        var i = 1
+        while (i < remainder.length) {
+            val char = remainder[i]
+            val escaped = remainder[i - 1] == '\\'
 
-        for ((i, char) in remainder.toCharArray()
-            .withIndex()) {
-            val escaped = if (i > 0) remainder[i - 1] == '\\' else false
+            if (!escaped) {
+                if (char == styleCloseChar) {
+                    styleFinished = true
+                    i++
+                    break
+                }
 
-            if (i < 1 || (!escaped && char == '\\')) continue
-
-            if (finishedStyleIndex == -1 && !escaped && char == styleCloseChar) { // Style is finished if not escaped
-                finishedStyleIndex = i
-                continue
-            }
-
-            if (finishedStyleIndex == -1) {
                 styleStringBuilder.append(char)
-                continue
             }
 
-            if (i == finishedStyleIndex + 1) { // Start of value declaration.
-                if (char != valueOpenChar) throw IllegalArgumentException("Pattern '$pattern', is invalid. Closing style declaration ']', should be followed by '(' @$i")
-                continue
-            }
-
-            if (!escaped && char == valueCloseChar) {
-                partLength = i + 1 // idk why but meh
-                break
-            }
-
-            if (i == remainder.length) {
-                throw IllegalArgumentException("Pattern '$pattern', is invalid. Unexpected end of pattern.")
-            }
-
-            valueStringBuilder.append(char)
+            i++
         }
 
-        this.valuePattern = Pattern.fromString(valueStringBuilder.toString())
+        if (!styleFinished) {
+            throw IllegalArgumentException("Pattern '$pattern', is invalid. No closing style declaration '$styleCloseChar'.")
+        }
+
+        if (i == remainder.length || remainder[i++] != valueOpenChar) {
+            throw IllegalArgumentException("Pattern '$pattern', is invalid. Closing style declaration '$styleCloseChar', should be followed by '$valueOpenChar' @$i")
+        }
+
+        if (i == remainder.length) {
+            throw IllegalArgumentException("Pattern '$pattern', is invalid. Unexpected end of pattern.")
+        }
+
+        this.valuePattern = Pattern.fromString(remainder.substring(i), valueCloseChar)
+        i += this.valuePattern.parts.sumOf { it.length }
+
+
+        if (i >= remainder.length || remainder[i++] != valueCloseChar) {
+            throw IllegalArgumentException("Pattern '$pattern', is invalid. Unexpected end of pattern.")
+        }
+
         this.value = valuePattern.parts.joinToString("") { it.value }
         this.style = styleStringBuilder.toString()
-        this.length = partLength
+        this.length = i
     }
 
     companion object : PatternPart.Delimiters {
