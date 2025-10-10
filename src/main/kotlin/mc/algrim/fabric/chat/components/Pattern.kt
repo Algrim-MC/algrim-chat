@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2025.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -68,10 +68,16 @@ class Pattern(val parts: Array<PatternPart>) {
 
     companion object {
 
-        fun fromString(patternString: String): Pattern {
+        fun fromString(patternString: String, matchUntil: Char? = null): Pattern {
             val parts = mutableListOf<PatternPart>()
             var i = 0
             var loopCount = 0
+
+            val literalUntilChars: CharArray = charArrayOf(
+                StylePatternPart.openChar,
+                RegexPatternPart.openChar,
+                *(matchUntil?.let { charArrayOf(matchUntil) } ?: charArrayOf())
+            )
 
             while (i < patternString.length) {
                 if (++loopCount > 2500) throw IllegalArgumentException("Pattern has exceeded the maximum number of iterations")
@@ -83,11 +89,11 @@ class Pattern(val parts: Array<PatternPart>) {
                     val part: PatternPart = when (char) {
                         StylePatternPart.openChar -> StylePatternPart(patternString, i)
                         RegexPatternPart.openChar -> RegexPatternPart(patternString, i)
+                        matchUntil -> break
                         else -> LiteralPatternPart(
                             patternString,
                             i,
-                            StylePatternPart.openChar,
-                            RegexPatternPart.openChar
+                            untilChars = literalUntilChars
                         )
                     }
 
