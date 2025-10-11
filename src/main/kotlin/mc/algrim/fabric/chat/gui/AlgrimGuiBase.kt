@@ -18,7 +18,6 @@
 package mc.algrim.fabric.chat.gui
 
 import fi.dy.masa.malilib.gui.GuiBase
-import mc.algrim.fabric.chat.AlgrimChat
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.widget.TextWidget
 
@@ -27,7 +26,6 @@ open class AlgrimGuiBase : GuiBase() {
 
     fun addTextWidget(textWidget: TextWidget): TextWidget {
         textWidgets.add(textWidget)
-        AlgrimChat.logger.info("Added text")
         return textWidget
     }
 
