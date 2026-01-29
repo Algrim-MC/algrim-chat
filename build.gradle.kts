@@ -2,9 +2,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("fabric-loom") version "1.10-SNAPSHOT"
+    id("fabric-loom") version "1.15-SNAPSHOT"
     id("maven-publish")
-    id("org.jetbrains.kotlin.jvm") version "2.0.0"
+    id("org.jetbrains.kotlin.jvm") version "2.3.0"
 }
 
 version = project.properties["mod_version"]!!
@@ -39,14 +39,15 @@ tasks.test {
 }
 
 tasks.processResources {
-    inputs.property("mod_id", project.properties["mod_id"])
-    inputs.property("version", project.version)
+    val expandMap = mapOf(
+        "mod_id" to project.properties["mod_id"].toString(),
+        "version" to project.version.toString()
+    )
+
+    expandMap.forEach { (k, v) -> inputs.property(k, v) }
 
     filesMatching("fabric.mod.json") {
-        expand(
-            "mod_id" to project.properties["mod_id"],
-            "version" to project.version
-        )
+        expand(expandMap)
     }
 }
 

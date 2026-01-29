@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023-2025.
+ * Copyright (C) 2023-2026.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -22,12 +22,12 @@ import fi.dy.masa.malilib.gui.button.ButtonGeneric
 import fi.dy.masa.malilib.gui.button.IButtonActionListener
 import fi.dy.masa.malilib.gui.widgets.WidgetLabel
 import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase
+import fi.dy.masa.malilib.render.GuiContext
 import fi.dy.masa.malilib.render.RenderUtils
 import mc.algrim.fabric.chat.gui.data.EmptyEntryData
 import mc.algrim.fabric.chat.gui.data.PatternEntryData
 import mc.algrim.fabric.chat.gui.data.PatternListEntryData
 import mc.algrim.fabric.chat.gui.data.SeparatorEntryData
-import net.minecraft.client.gui.DrawContext
 import kotlin.math.max
 
 class PatternListEntryWidget(
@@ -124,16 +124,16 @@ class PatternListEntryWidget(
         eventHandler?.invoke(this, entry!!, buttonId)
     }
 
-    override fun render(drawContext: DrawContext?, mouseX: Int, mouseY: Int, selected: Boolean) {
+    override fun render(ctx: GuiContext?, mouseX: Int, mouseY: Int, selected: Boolean) {
         RenderUtils.drawRect(
-            drawContext,
+            ctx,
             this.x,
             this.y,
             this.width - 10,
             this.height,
             (if (listIndex % 2 == 0) 0xA0101010 else 0xA0303030).toInt()
         )
-        super.render(drawContext, mouseX, mouseY, selected)
+        super.render(ctx, mouseX, mouseY, selected)
     }
 
     enum class ButtonId(val displayName: String) {

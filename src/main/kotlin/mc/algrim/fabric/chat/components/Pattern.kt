@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023-2025.
+ * Copyright (C) 2023-2026.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -87,9 +87,9 @@ class Pattern(val parts: Array<PatternPart>) {
 
                 if (!escaped) {
                     val part: PatternPart = when (char) {
+                        matchUntil -> break
                         StylePatternPart.openChar -> StylePatternPart(patternString, i)
                         RegexPatternPart.openChar -> RegexPatternPart(patternString, i)
-                        matchUntil -> break
                         else -> LiteralPatternPart(
                             patternString,
                             i,
