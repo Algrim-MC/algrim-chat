@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023.
+ * Copyright (C) 2023-2026.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -91,21 +91,17 @@ object ChatProcessor {
     }
 
     fun aggregateCSPs(messageCSPs: MutableList<Pair<Char, Style>>): Text {
-        var groupId = 0
-        var previousStyle = Style.EMPTY
-
-        return messageCSPs.groupingBy { (_, style) ->
-            if (style != previousStyle) {
-                previousStyle = style
-                ++groupId
-            } else groupId
-        }.aggregate { _, seg: Pair<StringBuilder, Style>?, (char, style), first ->
-            if (first) StringBuilder().append(char) to style
-            else {
-                seg!!.first.append(char)
-                seg
+        return messageCSPs.fold(mutableListOf<Pair<StringBuilder, Style>>()) { acc, (char, style) ->
+            acc.lastOrNull()?.let { (sb, prevStyle) ->
+                if (prevStyle == style) {
+                    sb.append(char)
+                    return@fold acc
+                }
             }
-        }.values.flatMap { (sb, style) -> Text.literal(sb.toString()).getWithStyle(style) }
+
+            acc.add(StringBuilder().append(char) to style)
+            acc
+        }.flatMap { (sb, style) -> Text.literal(sb.toString()).getWithStyle(style) }
             .fold(Text.empty()) { acc: MutableText, text: Text -> acc.append(text) }
     }
 }
