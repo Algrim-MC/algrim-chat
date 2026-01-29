@@ -1,6 +1,6 @@
 /*
  * This file is part of Algrim Chat, a chat styling fabric mod.
- * Copyright (C) 2023-2025.
+ * Copyright (C) 2023-2026.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License
@@ -25,15 +25,5 @@ class GuiTextField(x: Int, y: Int, width: Int, height: Int, textRenderer: TextRe
 
     init {
         this.setMaxLength(2048)
-    }
-
-    // Workaround for field not being unfocused.
-    override fun mouseClicked(mouseX: Double, mouseY: Double, mouseButton: Int): Boolean {
-        val ret = super.mouseClicked(mouseX, mouseY, mouseButton)
-
-        return if (!this.isMouseOver(mouseX.toInt(), mouseY.toInt())) {
-            this.isFocused = false
-            true
-        } else ret
     }
 }
